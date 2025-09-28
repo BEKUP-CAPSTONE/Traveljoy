@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:traveljoy/core/secrets.dart';
+import 'package:traveljoy/core/constants/secrets.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
