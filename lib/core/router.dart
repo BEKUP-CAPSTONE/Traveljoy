@@ -32,7 +32,7 @@ class AppRouter {
           return '/onboarding';
         }
         if (!loggedIn && !loggingIn && hasSeenOnboarding) {
-          return '/onboarding';
+          return '/login';
         }
         if (loggedIn && loggingIn) {
           return '/';
