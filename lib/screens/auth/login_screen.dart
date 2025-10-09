@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:traveljoy/providers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<LoginScreen> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<LoginScreen> {
+  // === TEXT FIELD CONTROLLERS ===
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   bool _isChecked = false;
   bool _isPasswordVisible = false;
 
@@ -22,13 +28,22 @@ class _LoginPageState extends State<LoginPage> {
   );
 
   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
 
     final double verticalPadding = screenHeight * 0.04;
 
+    // Akses AuthProvider untuk status loading dan error
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
-      // warna latar belakang eksplisit
       backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
@@ -55,7 +70,19 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 30),
 
               // Tombol Login
-              _buildLoginButton(context),
+              _buildLoginButton(context, authProvider),
+
+              // Tampilkan error message dari AuthProvider
+              if (authProvider.errorMessage != null && !authProvider.isLoading)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    authProvider.errorMessage!,
+                    style: TextStyle(color: kAccentRed, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
               const SizedBox(height: 30),
 
               // Teks "Or continue with"
@@ -123,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           style: const TextStyle(color: kBlack),
           decoration: InputDecoration(
@@ -153,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: _passwordController,
           obscureText: !_isPasswordVisible,
           style: const TextStyle(color: kBlack),
           decoration: InputDecoration(
@@ -227,10 +256,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _buildLoginButton(BuildContext context) {
+  Widget _buildLoginButton(BuildContext context, AuthProvider authProvider) {
     return ElevatedButton(
-      onPressed: () {
-        context.go('/');
+      // Nonaktifkan tombol jika sedang loading
+      onPressed: authProvider.isLoading ? null : () async {
+        if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Email dan Password wajib diisi.')),
+          );
+          return;
+        }
+
+        // Panggil method signIn yang sebenarnya dari AuthProvider
+        await authProvider.signIn(
+          email: _emailController.text.trim(), // Trim spasi
+          password: _passwordController.text,
+        );
+
+        // Redirect otomatis akan terjadi karena GoRouter mendengarkan AuthProvider
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryDark,
@@ -241,7 +284,13 @@ class _LoginPageState extends State<LoginPage> {
         elevation: 5,
         shadowColor: kPrimaryColor.withOpacity(0.4),
       ),
-      child: const Text(
+      child: authProvider.isLoading
+          ? const SizedBox( // Tampilkan loading spinner
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+      )
+          : const Text(
         'Login',
         style: TextStyle(
           fontSize: 18,

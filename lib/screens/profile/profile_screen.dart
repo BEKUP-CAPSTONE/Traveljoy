@@ -25,17 +25,20 @@ class ProfileScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("User: ${authProvider.userEmail.isNotEmpty ? authProvider.userEmail : "Guest"}"),
+            // Text("User: ${authProvider.userEmail.isNotEmpty ? authProvider.userEmail : "Guest"}"),
             const SizedBox(height: 16),
             Text("Itinerary dibuat: ${itineraryProvider.history.length}"),
             Text("Wisata favorit: ${profileProvider.favoriteCount}"),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                authProvider.logout();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Logout berhasil")),
-                );
+              onPressed: () async {
+                await authProvider.logout();
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Logout berhasil")),
+                  );
+                }
               },
               child: const Text("Logout"),
             ),

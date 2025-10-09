@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import 'package:traveljoy/providers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -10,16 +12,32 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  // === TEXT FIELD CONTROLLERS ===
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _retypePasswordController = TextEditingController();
+
   bool _isPasswordVisible = false;
   bool _isRetypePasswordVisible = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _retypePasswordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double verticalPadding = screenHeight * 0.04;
 
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
-      // warna latar belakang eksplisit
       backgroundColor: kWhite,
       body: SingleChildScrollView(
         child: Padding(
@@ -40,6 +58,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: 'Name',
                 hint: 'Enter your full name',
                 keyboardType: TextInputType.name,
+                controller: _nameController,
               ),
               const SizedBox(height: 20),
 
@@ -48,12 +67,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 label: 'Email',
                 hint: 'Enter your email',
                 keyboardType: TextInputType.emailAddress,
+                controller: _emailController,
               ),
               const SizedBox(height: 20),
 
               // Form Input: Password
               _buildPasswordField(
                 label: 'Password',
+                controller: _passwordController,
                 isPasswordVisible: _isPasswordVisible,
                 onToggleVisibility: (isVisible) {
                   setState(() {
@@ -66,6 +87,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Form Input: Re-type Password
               _buildPasswordField(
                 label: 'Re-type Password',
+                controller: _retypePasswordController,
                 isPasswordVisible: _isRetypePasswordVisible,
                 onToggleVisibility: (isVisible) {
                   setState(() {
@@ -76,7 +98,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
               const SizedBox(height: 40),
 
               // Tombol Register
-              _buildRegisterButton(context),
+              _buildRegisterButton(context, authProvider),
+
+              // Tampilkan error message dari AuthProvider
+              if (authProvider.errorMessage != null && !authProvider.isLoading)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    authProvider.errorMessage!,
+                    style: TextStyle(color: kAccentRed, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+
               const SizedBox(height: 40),
 
               // Tautan Sign In
@@ -126,6 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     required String label,
     required String hint,
     required TextInputType keyboardType,
+    required TextEditingController controller,
   }) {
     final OutlineInputBorder borderStyle = OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
@@ -148,6 +183,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           keyboardType: keyboardType,
           style: TextStyle(color: kBlack),
           decoration: InputDecoration(
@@ -166,6 +202,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildPasswordField({
     required String label,
+    required TextEditingController controller,
     required bool isPasswordVisible,
     required Function(bool) onToggleVisibility,
   }) {
@@ -190,6 +227,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         const SizedBox(height: 8),
         TextField(
+          controller: controller,
           obscureText: !isPasswordVisible,
           style: TextStyle(color: kBlack),
           decoration: InputDecoration(
@@ -215,10 +253,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildRegisterButton(BuildContext context) {
+  Widget _buildRegisterButton(BuildContext context, AuthProvider authProvider) {
     return ElevatedButton(
-      onPressed: () {
-        context.go('/login');
+      onPressed: authProvider.isLoading ? null : () async {
+        if (_passwordController.text != _retypePasswordController.text) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Password tidak cocok.')),
+          );
+          return;
+        }
+
+        if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _nameController.text.isEmpty) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Semua field wajib diisi.')),
+          );
+          return;
+        }
+
+        // Panggil method signUp yang sebenarnya dari AuthProvider
+        final success = await authProvider.signUp(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+
+        if (success) {
+          // Navigasi GoRouter akan terjadi otomatis (ke /)
+        }
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryDark,
@@ -229,8 +289,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         elevation: 5,
         shadowColor: kPrimaryDark.withOpacity(0.4),
       ),
-      child: const Text(
-        'Sing Up',
+      child: authProvider.isLoading
+          ? const SizedBox(
+        width: 24,
+        height: 24,
+        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+      )
+          : const Text(
+        'Register',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -254,8 +320,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             WidgetSpan(
               child: InkWell(
                 onTap: () {
-                  // Navigasi ke rute Register
-                  context.go('/register');
+                  // Navigasi kembali ke Login
+                  context.go('/login');
                 },
                 child: Text(
                   'Sign In',
