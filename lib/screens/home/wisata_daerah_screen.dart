@@ -51,7 +51,9 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
           final gambar = (wisata['gambar_url'] as List?)?.isNotEmpty == true
               ? wisata['gambar_url'][0]
               : 'assets/images/wisataDefault.png';
-          return Card(
+          return GestureDetector(
+            onTap: () => context.push('/detail-wisata/${wisata['id']}'),
+            child: Card(
             margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             child: ListTile(
               leading: ClipRRect(
@@ -72,6 +74,7 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+          )
           );
         },
       ),

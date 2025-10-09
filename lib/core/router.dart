@@ -30,6 +30,14 @@ class AppRouter {
             return WisataDaerahScreen(idDaerah: id);
           },
         ),
+        GoRoute(
+          path: '/detail-wisata/:id',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            return DetailWisataScreen(id: id);
+          },
+        ),
+
       ],
       redirect: (context, state) {
         final loggedIn = authProvider.isLoggedIn;

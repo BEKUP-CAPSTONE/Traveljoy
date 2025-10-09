@@ -90,4 +90,21 @@ class WisataProvider extends ChangeNotifier {
     }
   }
 
+  Future<Map<String, dynamic>?> fetchWisataById(int id) async {
+    try {
+      final response = await supabase
+          .from('wisata')
+          .select()
+          .eq('id', id)
+          .maybeSingle();
+
+      if (response == null) return null;
+      return response;
+    } catch (e) {
+      debugPrint('Error fetchWisataById: $e');
+      return null;
+    }
+  }
+
+
 }
