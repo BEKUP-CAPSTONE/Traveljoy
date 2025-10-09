@@ -4,6 +4,7 @@ import 'package:traveljoy/providers/auth_provider.dart';
 import 'package:traveljoy/providers/onboarding_provider.dart';
 import 'package:traveljoy/screens/auth/login_screen.dart';
 import 'package:traveljoy/screens/auth/register_screen.dart';
+import 'package:traveljoy/screens/favorite/favorite_screen.dart';
 import 'package:traveljoy/screens/home/daerah_screen.dart';
 import 'package:traveljoy/screens/home/wisata_daerah_screen.dart';
 import 'package:traveljoy/screens/onboarding/onboarding_screen.dart';
@@ -30,13 +31,13 @@ class AppRouter {
             return WisataDaerahScreen(idDaerah: id);
           },
         ),
-        GoRoute(
-          path: '/detail-wisata/:id',
+        GoRoute(path: '/detail-wisata/:id',
           builder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
             return DetailWisataScreen(id: id);
           },
         ),
+        GoRoute(path: '/favorites',builder: (context, state) => const FavoriteScreen()),
 
       ],
       redirect: (context, state) {

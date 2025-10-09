@@ -32,6 +32,32 @@ class AuthProvider with ChangeNotifier {
   //   });
   // }
 
+  Future<void> _ensureUserProfile() async {
+    final user = supabase.auth.currentUser;
+    if (user == null) return;
+
+    try {
+      // Cek apakah profile sudah ada
+      final existingProfile = await supabase
+          .from('profiles')
+          .select()
+          .eq('id', user.id)
+          .maybeSingle();
+
+      if (existingProfile == null) {
+        await supabase.from('profiles').insert({
+          'id': user.id,
+          'name': user.email?.split('@').first ?? 'User Baru',
+          'avatar_url': null,
+        });
+        debugPrint('✅ [Auth] Profile baru dibuat untuk user: ${user.id}');
+      } else {
+        debugPrint('ℹ️ [Auth] Profile sudah ada untuk user: ${user.id}');
+      }
+    } catch (e) {
+      debugPrint('❌ [Auth] Gagal memastikan profile user: $e');
+    }
+  }
   /// ---------------- Email Sign Up ----------------
 
   Future<bool> signUp({required String email, required String password}) async {
@@ -49,6 +75,7 @@ class AuthProvider with ChangeNotifier {
 
       if (response.user != null) {
         debugPrint('✅ [Auth] Register success: ${response.user!.id}');
+        await _ensureUserProfile();
         return true;
       } else {
         _errorMessage = 'Registrasi gagal. Silakan coba lagi.';
@@ -84,6 +111,7 @@ class AuthProvider with ChangeNotifier {
 
       if (response.user != null) {
         debugPrint('✅ [Auth] Login success: ${response.user!.email}');
+        await _ensureUserProfile();
         return true;
       } else {
         _errorMessage = 'Login gagal. Periksa email dan password.';
@@ -106,7 +134,6 @@ class AuthProvider with ChangeNotifier {
 
   Future<void> logout() async {
     try {
-
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove('has_seen_onboarding'); // Hapus status onboarding
 

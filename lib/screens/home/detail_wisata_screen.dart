@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:traveljoy/providers/favorite_provider.dart';
 import 'package:traveljoy/providers/wisata_provider.dart';
 import 'package:go_router/go_router.dart';
 
@@ -22,24 +23,66 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
   }
 
   Future<void> _loadDetail() async {
-    final provider = context.read<WisataProvider>();
-    final data = await provider.fetchWisataById(widget.id);
-    setState(() {
-      wisata = data;
-      isLoading = false;
-    });
+    try {
+      final provider = context.read<WisataProvider>();
+      final data = await provider.fetchWisataById(widget.id);
+
+      if (mounted) {
+        setState(() {
+          wisata = data;
+          isLoading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint('❌ Gagal load detail wisata: $e');
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   leading: IconButton(
+      //     icon: const Icon(Icons.arrow_back),
+      //     onPressed: () => context.pop(),
+      //   ),
+      //   title: const Text('Detail Wisata'),
+      // ),
       appBar: AppBar(
+        title: Text(wisata?['nama_wisata'] ?? 'Detail Wisata'),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
-        ),
-        title: const Text('Detail Wisata'),
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () => context.pop(),
+            ),
+        actions: [
+          if (!isLoading && wisata != null)
+            Consumer<FavoriteProvider>(
+              builder: (context, favProvider, _) {
+                final int id = wisata!['id'];
+                final bool isFav = favProvider.isFavorite(id);
+                return IconButton(
+                  icon: Icon(
+                    isFav ? Icons.favorite : Icons.favorite_border,
+                    color: Colors.redAccent,
+                  ),
+                  onPressed: () {
+                    if (isFav) {
+                      favProvider.removeFavorite(context, id);
+                    } else {
+                      favProvider.addFavorite(context, id);
+                    }
+                  },
+                );
+              },
+            ),
+        ],
       ),
+
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : wisata == null
