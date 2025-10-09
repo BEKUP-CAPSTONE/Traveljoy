@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traveljoy/providers/wisata_provider.dart';
@@ -179,9 +180,18 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
 
             // Wisata
-            const Text(
-              'Rekomendasi untuk Anda',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Rekomendasi untuk Anda',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () => context.push('/daerah'),
+                  child: const Text('Lihat Daerah'),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
 

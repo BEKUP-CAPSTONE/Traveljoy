@@ -66,4 +66,28 @@ class WisataProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchDaerah() async {
+    try {
+      final response = await supabase.from('daerah').select('*').order('nama_daerah');
+      return response;
+    } catch (e) {
+      debugPrint('❌ [Daerah] Error fetching daerah: $e');
+      return [];
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> fetchWisataByDaerah(int idDaerah) async {
+    try {
+      final response = await supabase
+          .from('wisata')
+          .select('*, kategori(nama_kategori)')
+          .eq('id_daerah', idDaerah);
+      return response;
+    } catch (e) {
+      debugPrint('❌ [WisataDaerah] Error fetching wisata by daerah: $e');
+      return [];
+    }
+  }
+
 }
