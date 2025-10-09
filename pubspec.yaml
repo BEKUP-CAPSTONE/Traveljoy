@@ -67,9 +67,9 @@ flutter:
     - assets/images/
   #   - images/a_dot_ham.jpeg
     - assets/secrets.json
-    - assets/images/onboarding1.jpg
-    - assets/images/onboarding2.jpg
-    - assets/images/onboarding3.jpg
+    - assets/images/onboarding1.jpeg
+    - assets/images/onboarding2.jpeg
+    - assets/images/onboarding3.jpeg
     - assets/images/wisataDefault.png
 
 

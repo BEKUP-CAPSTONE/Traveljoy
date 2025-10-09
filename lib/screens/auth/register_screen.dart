@@ -12,8 +12,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  // === TEXT FIELD CONTROLLERS ===
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _retypePasswordController = TextEditingController();
@@ -23,7 +21,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _retypePasswordController.dispose();
@@ -52,15 +49,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Teks (Let's Get Started)
               _buildWelcomeText(),
               const SizedBox(height: 40),
-
-              // Form Input: Nama
-              _buildInputField(
-                label: 'Name',
-                hint: 'Enter your full name',
-                keyboardType: TextInputType.name,
-                controller: _nameController,
-              ),
-              const SizedBox(height: 20),
 
               // Form Input: Email
               _buildInputField(
@@ -263,22 +251,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
 
-        if (_emailController.text.isEmpty || _passwordController.text.isEmpty || _nameController.text.isEmpty) {
+        if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Semua field wajib diisi.')),
+            const SnackBar(content: Text('Email dan Password wajib diisi.')),
           );
           return;
         }
 
         // Panggil method signUp yang sebenarnya dari AuthProvider
-        final success = await authProvider.signUp(
+        await authProvider.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
 
-        if (success) {
-          // Navigasi GoRouter akan terjadi otomatis (ke /)
-        }
+        // Redirect otomatis akan terjadi (ke /)
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: kPrimaryDark,
@@ -320,7 +306,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             WidgetSpan(
               child: InkWell(
                 onTap: () {
-                  // Navigasi kembali ke Login
                   context.go('/login');
                 },
                 child: Text(
