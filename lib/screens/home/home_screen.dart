@@ -300,13 +300,16 @@
 //   }
 // }
 
+
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:traveljoy/providers/wisata_provider.dart';
 import 'package:traveljoy/providers/favorite_provider.dart';
 import '../../core/constants/app_colors.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -318,12 +321,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
 
-  final List<String> _filters = ['Semua', 'Populer', 'Rekomendasi', 'Lainnya'];
-  int _selectedFilterIndex = 1;
+  final List<String> _filters = ['Semua', 'Terfavorit', 'Untuk Anda'];
+  int _selectedFilterIndex = 0;
+
+  late int _currentBannerPage;
+  late final PageController _bannerPageController;
+  Timer? _bannerTimer;
+  final List<String> _bannerImages = [
+    'assets/images/onboarding1.jpeg',
+    'assets/images/onboarding2.jpeg',
+    'assets/images/onboarding3.jpeg',
+  ];
+
+  int? _selectedIdDaerah;
 
   @override
   void initState() {
     super.initState();
+
+    _currentBannerPage = 0;
+    _bannerPageController = PageController();
+    _startAutoScroll();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final wisataProvider = context.read<WisataProvider>();
@@ -332,11 +350,61 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _startAutoScroll() {
+    _bannerTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_bannerPageController.hasClients) {
+        int nextPage = (_currentBannerPage + 1) % _bannerImages.length;
+        _bannerPageController.animateToPage(
+          nextPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     _searchController.dispose();
+    _bannerPageController.dispose();
+    _bannerTimer?.cancel();
     super.dispose();
   }
+
+  List<Map<String, dynamic>> _getFilteredWisata(WisataProvider wP, FavoriteProvider fP) {
+    List<Map<String, dynamic>> allWisata = wP.wisata.cast<Map<String, dynamic>>();
+
+    if (_selectedIdDaerah != null && _selectedIdDaerah! > 0) {
+      allWisata = allWisata.where((w) => w['id_daerah'] == _selectedIdDaerah).toList();
+    }
+
+    switch (_selectedFilterIndex) {
+      case 1:
+        final Set<int> favoriteIds = fP.favorites.map((f) => f['wisata_id'] as int).toSet();
+        return allWisata.where((w) => w['id'] != null && favoriteIds.contains(w['id'])).toList();
+      case 2:
+        return allWisata.take(10).toList();
+      case 0:
+      default:
+        return allWisata;
+    }
+  }
+
+  String _buildDisplayAddress(Map<String, dynamic> wisata) {
+    final String lokasi = wisata['lokasi'] ?? '';
+    final String namaDaerah = wisata['nama_daerah'] ?? '';
+    final String alamatLengkap = wisata['alamat'] ?? '';
+
+    if (alamatLengkap.isNotEmpty) {
+      return alamatLengkap;
+    }
+    else if (lokasi.isNotEmpty || namaDaerah.isNotEmpty) {
+      final parts = [if (lokasi.isNotEmpty) lokasi, if (namaDaerah.isNotEmpty) namaDaerah];
+      return parts.join(', ');
+    }
+    return 'Lokasi tidak tersedia';
+  }
+
 
   Widget _buildHeader(BuildContext context, String displayName) {
     return Column(
@@ -345,53 +413,48 @@ class _HomeScreenState extends State<HomeScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                const CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage('assets/images/avatar.png'),
-                ),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      displayName,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: kBlack,
+            GestureDetector(
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    radius: 24,
+                    backgroundImage: AssetImage('assets/images/logo.png'),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        displayName,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: kWhite,
+                        ),
                       ),
-                    ),
-                    const Text(
-                      'Where do you want to go?',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: kHintColor,
+                      const Text(
+                        'Where do you want to go?',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: kHintColor,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-            // Ikon Notifikasi
             Container(
               width: 48,
               height: 48,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: kWhite,
-                boxShadow: [
-                  BoxShadow(
-                    color: kNeutralGrey.withOpacity(0.2),
-                    blurRadius: 4,
-                  ),
-                ],
+                color: kWhite.withOpacity(0.25),
               ),
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  Icon(Icons.notifications_none, color: kBlack),
+                  Icon(Icons.notifications_none, color: kPrimaryDark),
                   const Positioned(
                     top: 12,
                     right: 12,
@@ -415,9 +478,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
         _buildSearchBar(context),
         const SizedBox(height: 20),
-
-        _buildFilterTabs(),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -426,7 +486,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       height: 50,
       decoration: BoxDecoration(
-        color: kWhite,
+        color: kWhite.withOpacity(0.25),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: kNeutralGrey.withOpacity(0.5)),
       ),
@@ -434,16 +494,16 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           const Padding(
             padding: EdgeInsets.only(left: 16.0, right: 8.0),
-            child: Icon(Icons.search, color: kNeutralGrey),
+            child: Icon(Icons.search, color:kPrimaryDark),
           ),
           Expanded(
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Search',
-                hintStyle: TextStyle(color: kNeutralGrey),
+                hintText: 'Cari wisata...',
+                hintStyle: TextStyle(color: kPrimaryDark),
                 border: InputBorder.none,
-                contentPadding: EdgeInsets.symmetric(vertical: 12),
+                contentPadding: const EdgeInsets.symmetric(vertical: 12),
               ),
             ),
           ),
@@ -479,12 +539,15 @@ class _HomeScreenState extends State<HomeScreen> {
               decoration: BoxDecoration(
                 color: isSelected ? kTeal : kWhite,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: isSelected ? kTeal : kNeutralGrey.withOpacity(0.3),
+                ),
               ),
               child: Text(
                 _filters[index],
                 style: TextStyle(
-                  color: isSelected ? kWhite : kHintColor,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w600,
+                  color: isSelected ? kWhite : kBlack,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
             ),
@@ -494,116 +557,128 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildPopularWisata(BuildContext context, WisataProvider provider) {
-    return Consumer<FavoriteProvider>(
-      builder: (context, favProvider, child) {
-        return SizedBox(
-          height: 250,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: provider.wisata.length,
-            itemBuilder: (context, index) {
-              final wisata = provider.wisata[index];
-              final int wisataId = wisata['id'] ?? 0;
-              final bool isFav = favProvider.isFavorite(wisataId);
+  Widget _buildAutoScrollBanner(BuildContext context) {
 
-              final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
-              final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
-                  ? gambarList.first.toString()
-                  : 'assets/images/wisataDefault.png';
+    const double newBannerHeight = 295.0;
 
-              // Card Wisata
-              return GestureDetector(
-                onTap: () => context.push('/detail-wisata/$wisataId'),
-                child: Container(
-                  width: 180,
-                  margin: const EdgeInsets.only(right: 16),
-                  decoration: BoxDecoration(
-                    color: kWhite,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: kNeutralGrey.withOpacity(0.2),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
+    return SizedBox(
+      height: newBannerHeight,
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+        child: Stack(
+          children: [
+            PageView.builder(
+              controller: _bannerPageController,
+              itemCount: _bannerImages.length,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentBannerPage = index;
+                });
+              },
+              itemBuilder: (context, index) {
+                return Container(
+                  child: Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.asset(
+                          _bannerImages[index],
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color.fromRGBO(0, 0, 0, 0.2), Colors.transparent],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter,
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
+  Widget _buildKategoriGrid(WisataProvider provider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Kategori Wisata',
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: kWhite,
+          ),
+        ),
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: provider.kategori.length,
+            itemBuilder: (context, index) {
+              final kategori = provider.kategori[index];
+
+              IconData categoryIcon;
+              switch (kategori['nama_kategori']?.toLowerCase()) {
+                case 'alam':
+                  categoryIcon = Icons.eco_outlined;
+                  break;
+                case 'kuliner':
+                  categoryIcon = Icons.restaurant_menu_outlined;
+                  break;
+                case 'religi':
+                  categoryIcon = Icons.mosque_outlined;
+                  break;
+                case 'budaya':
+                  categoryIcon = Icons.museum_outlined;
+                  break;
+                case 'sejarah':
+                  categoryIcon = Icons.history_edu_outlined;
+                  break;
+                default:
+                  categoryIcon = Icons.place;
+              }
+
+              return GestureDetector(
+                onTap: () {
+                  context.push('/wisata-daerah/${kategori['id']}');
+                },
+                child: Container(
+                  width: 80,
+                  margin: const EdgeInsets.only(right: 12),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      // Gambar dengan Ikon Love
-                      Stack(
-                        children: [
-                          ClipRRect(
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-                            child: _buildImage(gambarUrl, 160, 180),
-                          ),
-                          // IKON HATI
-                          Positioned(
-                            top: 10,
-                            right: 10,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: kWhite.withOpacity(0.8),
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  isFav ? Icons.favorite : Icons.favorite_outline,
-                                  color: kAccentRed,
-                                  size: 24,
-                                ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  if (isFav) {
-                                    favProvider.removeFavorite(context, wisataId);
-                                  } else {
-                                    favProvider.addFavorite(context, wisataId);
-                                  }
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      // Nama dan Lokasi
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Text(
-                          wisata['nama_wisata'] ?? '-',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                            color: kPrimaryDark,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                      CircleAvatar(
+                        radius: 28,
+                        backgroundColor:kWhite.withOpacity(0.25),
+                        child: Icon(
+                          categoryIcon,
+                          color: kPrimaryDark,
+                          size: 28,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12),
-                        child: Row(
-                          children: [
-                            Icon(Icons.location_on, color: kTeal, size: 14),
-                            const SizedBox(width: 4),
-                            Expanded(
-                              child: Text(
-                                "${wisata['lokasi'] ?? ''}, ${wisata['nama_daerah'] ?? '-'}",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: kNeutralGrey,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
+                      const SizedBox(height: 6),
+                      Text(
+                        kategori['nama_kategori'] ?? '',
+                        style: const TextStyle(fontSize: 13, color: kWhite),
+                        textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
@@ -611,13 +686,145 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
+        ),
+      ],
+    );
+  }
+
+
+  Widget _buildPopularWisata(
+      BuildContext context,
+      WisataProvider provider,
+      FavoriteProvider favProvider,
+      ) {
+    final List<Map<String, dynamic>> filteredWisata =
+    _getFilteredWisata(provider, favProvider);
+
+    return Consumer<FavoriteProvider>(
+      builder: (context, favProvider, child) {
+        return GridView.builder(
+          padding: EdgeInsets.zero,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 16,
+            mainAxisExtent: 230,
+          ),
+          itemCount: filteredWisata.length,
+          itemBuilder: (context, index) {
+            final wisata = filteredWisata[index];
+            final int wisataId = wisata['id'] ?? 0;
+            final bool isFav = favProvider.isFavorite(wisataId);
+
+            final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
+            final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
+                ? gambarList.first.toString()
+                : 'assets/images/wisataDefault.png';
+
+            final String displayAddress = _buildDisplayAddress(wisata);
+
+            return GestureDetector(
+              onTap: () => context.push('/detail-wisata/$wisataId'),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: kWhite,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: kNeutralGrey.withOpacity(0.2),
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(16),
+                          ),
+                          child: _buildImage(gambarUrl, 130, double.infinity),
+                        ),
+                        Positioned(
+                          top: 10,
+                          right: 10,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: kWhite.withOpacity(0.8),
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                isFav ? Icons.favorite : Icons.favorite_outline,
+                                color: kAccentRed,
+                                size: 22,
+                              ),
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                              onPressed: () {
+                                if (isFav) {
+                                  favProvider.removeFavorite(context, wisataId);
+                                } else {
+                                  favProvider.addFavorite(context, wisataId);
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        wisata['nama_wisata'] ?? '-',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: kPrimaryDark,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Icon(Icons.location_on, color: kTeal, size: 14),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              displayAddress,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: kNeutralGrey,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
   }
 
   Widget _buildSpecialForYou(BuildContext context, WisataProvider provider) {
-    // Daftar wisata "Special For You"
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -632,23 +839,19 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: kBlack,
               ),
             ),
-            // Tombol Region / View All
-            DropdownButton<String>(
-              value: 'Region', // Nilai default
-              icon: Icon(Icons.keyboard_arrow_down, color: kPrimaryDark),
-              underline: const SizedBox(),
-              items: <String>['Region', 'View All'].map((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: TextStyle(color: kPrimaryDark, fontWeight: FontWeight.bold),
-                  ),
-                );
-              }).toList(),
-              onChanged: (String? newValue) {
-                // Tambahkan aksi filter di sini jika diperlukan
+            TextButton(
+              onPressed: () async {
+                final selectedId = await context.push('/daerah');
+                if (selectedId != null && selectedId is int) {
+                  setState(() {
+                    _selectedIdDaerah = selectedId;
+                  });
+                }
               },
+              child: Text(
+                _selectedIdDaerah != null && _selectedIdDaerah! > 0 ? 'Ganti Daerah' : 'Pilih Daerah',
+                style: TextStyle(color: kTeal, fontWeight: FontWeight.bold),
+              ),
             ),
           ],
         ),
@@ -658,13 +861,15 @@ class _HomeScreenState extends State<HomeScreen> {
           height: 100,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: provider.wisata.length > 3 ? 3 : provider.wisata.length, // Hanya tampilkan 3-4 item
+            itemCount: provider.wisata.length > 3 ? 3 : provider.wisata.length,
             itemBuilder: (context, index) {
               final wisata = provider.wisata[index];
               final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
               final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
                   ? gambarList.first.toString()
                   : 'assets/images/wisataDefault.png';
+
+              final String displayAddress = _buildDisplayAddress(wisata);
 
               return GestureDetector(
                 onTap: () => context.push('/detail-wisata/${wisata['id']}'),
@@ -712,7 +917,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
-                                    wisata['nama_daerah'] ?? '-',
+                                    displayAddress,
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: kNeutralGrey,
@@ -758,7 +963,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(
-          'assets/images/wisataDefault.png', // Fallback image
+          'assets/images/wisataDefault.png',
           height: height,
           width: width,
           fit: BoxFit.cover,
@@ -776,9 +981,9 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final wisataProvider = context.watch<WisataProvider>();
-    final supabase = Supabase.instance.client;
-
     final displayName = 'Esther Howard';
+
+    const double overlapAmount = 20.0;
 
     return Scaffold(
       backgroundColor: kWhite,
@@ -788,19 +993,31 @@ class _HomeScreenState extends State<HomeScreen> {
             : ListView(
           padding: const EdgeInsets.only(top: 12, left: 16, right: 16),
           children: [
-            // Header, Search, dan Filter
-            _buildHeader(context, displayName),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                  top: -overlapAmount,
+                  left: -16,
+                  right: -16,
+                  child: _buildAutoScrollBanner(context),
+                ),
 
-            // Wisata Populer
-            _buildPopularWisata(context, wisataProvider),
+                _buildHeader(context, displayName),
+              ],
+            ),
+
+            _buildKategoriGrid(wisataProvider),
             const SizedBox(height: 30),
 
-            // Special For You
+            _buildFilterTabs(),
+            const SizedBox(height: 20),
+
+            _buildPopularWisata(context, wisataProvider, context.watch<FavoriteProvider>()),
+            const SizedBox(height: 30),
+
             _buildSpecialForYou(context, wisataProvider),
             const SizedBox(height: 30),
-
-            // Footer Spacer
-            const SizedBox(height: 20),
           ],
         ),
       ),

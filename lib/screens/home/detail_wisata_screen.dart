@@ -176,8 +176,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/favorite_provider.dart';
@@ -187,7 +185,7 @@ import '../../core/constants/app_colors.dart';
 
 class DetailWisataScreen extends StatefulWidget {
   final int id;
-  const DetailWisataScreen({super.key, required this.id});
+  const DetailWisataScreen({super.key, required final this.id});
 
   @override
   State<DetailWisataScreen> createState() => _DetailWisataScreenState();
@@ -197,14 +195,30 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
   Map<String, dynamic>? wisata;
   bool isLoading = true;
 
-  int _selectedTab = 0;
-
-  final List<String> _tabs = ['Ringkasan', 'Detail', 'Ulasan'];
-
   @override
   void initState() {
     super.initState();
     _loadDetail();
+  }
+
+  String _formatRupiahManual(dynamic amount) {
+    num value;
+    if (amount is String) {
+      value = num.tryParse(amount) ?? 0;
+    } else if (amount is num) {
+      value = amount;
+    } else {
+      value = 0;
+    }
+
+    final String numStr = value.toInt().toString();
+
+    String formatted = numStr.replaceAllMapped(
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]}.',
+    );
+
+    return 'Rp$formatted';
   }
 
   Future<void> _loadDetail() async {
@@ -231,8 +245,10 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+      return Scaffold(
+        body: Center(child: CircularProgressIndicator(
+          color: kTeal,
+        )),
       );
     }
 
@@ -253,7 +269,6 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          // GAMBAR LATAR BELAKANG (FULL SCREEN)
           Positioned.fill(
             child: Image.network(
               gambarUrl,
@@ -267,7 +282,6 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             ),
           ),
 
-          // GRADIENT di bagian atas untuk AppBar
           Positioned(
             top: 0,
             left: 0,
@@ -284,7 +298,6 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             ),
           ),
 
-          // APP BAR
           Positioned(
             top: 0,
             left: 0,
@@ -303,16 +316,13 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             ),
           ),
 
-          // DETAIL WISATA
           _buildDetailSheet(context, wisataData),
         ],
       ),
 
-      // BOTTOM ACTION
       bottomNavigationBar: _buildBottomActionButton(context, wisataData['id']),
     );
   }
-
 
   Widget _buildFavoriteButton(int wisataId) {
     return Consumer<FavoriteProvider>(
@@ -339,7 +349,10 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
     final double screenHeight = MediaQuery.of(context).size.height;
     final double sheetHeight = screenHeight * 0.55;
 
-    final String harga = 'Rp${data['harga_tiket'] ?? '0'}';
+    final String formattedHarga = _formatRupiahManual(data['harga_tiket']);
+
+    final String namaWisata = data['nama_wisata'] ?? 'Nama Wisata';
+    final String deskripsi = data['deskripsi_wisata'] ?? 'Belum ada deskripsi untuk wisata ini.';
 
     return Positioned(
       bottom: 0,
@@ -361,53 +374,80 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // HEADER NAMA DAN HARGA
+            Text(
+              namaWisata,
+              style: TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: kPrimaryDark,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 8),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  child: Text(
-                    data['nama_wisata'] ?? 'Nama Wisata',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: kPrimaryDark,
+                Row(
+                  children: [
+                    Icon(Icons.star, color: kWarningColor, size: 16),
+                    const SizedBox(width: 4),
+                    Text('4.9 (2.7K)', style: TextStyle(color: kHintColor, fontSize: 14)),
+                  ],
+                ),
+
+                Row(
+                  children: [
+                    Text(
+                      formattedHarga,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: kTeal,
+                      ),
                     ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Text(
-                  harga,
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: kTeal,
-                  ),
+                  ],
                 ),
               ],
             ),
-            const SizedBox(height: 4),
-
-            // RATING (Simulasi) dan Estimated Cost
-            Row(
-              children: [
-                Icon(Icons.star, color: kWarningColor, size: 16),
-                const SizedBox(width: 4),
-                Text('4.9 (2.7K)', style: TextStyle(color: kHintColor, fontSize: 14)),
-                const Spacer(),
-                Text('*Estimated Cost', style: TextStyle(color: kHintColor, fontSize: 14)),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            // TAB BAR (Overview, Details, Reviews)
-            _buildSelectableTabBar(),
             const SizedBox(height: 24),
 
             Expanded(
               child: SingleChildScrollView(
-                child: _buildTabContent(data),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ringkasan',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      deskripsi,
+                      textAlign: TextAlign.justify,
+                      style: TextStyle(color: kBlack, fontSize: 14, height: 1.5),
+                    ),
+                    const SizedBox(height: 24),
+
+                    _buildMetricRow(data),
+                    const SizedBox(height: 24),
+
+                    Text(
+                      'Informasi Detail',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
+                    ),
+                    const SizedBox(height: 12),
+
+                    if (data['alamat'] != null && (data['alamat'] as String).isNotEmpty)
+                      _buildDetailRow(Icons.location_on_outlined, 'Alamat', data['alamat']),
+
+                    if (data['jam_buka'] != null && (data['jam_buka'] as String).isNotEmpty)
+                      _buildDetailRow(Icons.access_time_outlined, 'Jam Operasional', data['jam_buka']),
+
+                    const SizedBox(height: 24),
+                  ],
+                ),
               ),
             ),
           ],
@@ -416,125 +456,26 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
     );
   }
 
-  // Widget Tab Bar
-  Widget _buildSelectableTabBar() {
-    return Row(
-      children: List.generate(_tabs.length, (index) {
-        final isSelected = index == _selectedTab;
-
-        const EdgeInsets tabPadding = EdgeInsets.symmetric(horizontal: 16, vertical: 8);
-
-        return Padding(
-          padding: const EdgeInsets.only(right: 10),
-          child: GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedTab = index;
-              });
-            },
-            child: Container(
-              padding: tabPadding,
-              decoration: BoxDecoration(
-                color: isSelected ? kTeal : Colors.transparent,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                _tabs[index],
-                style: TextStyle(
-                  color: isSelected ? kWhite : kHintColor,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _buildTabContent(Map<String, dynamic> data) {
-    switch (_selectedTab) {
-      case 0:
-        return _buildOverviewContent(data);
-      case 1:
-        return _buildDetailsContent(data);
-      case 2:
-        return _buildReviewsContent(data);
-      default:
-        return const Center(child: Text("Tab tidak valid."));
-    }
-  }
-
-  Widget _buildOverviewContent(Map<String, dynamic> data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Deskripsi
-        Text(
-          data['deskripsi_wisata'] ?? 'Belum ada deskripsi untuk wisata ini.',
-          textAlign: TextAlign.justify,
-          style: TextStyle(color: kBlack, fontSize: 14),
-        ),
-        const SizedBox(height: 24),
-
-        // DETAIL METRIK (Duration, Distance, Temperature)
-        _buildMetricRow(data),
-      ],
-    );
-  }
-
-  Widget _buildDetailsContent(Map<String, dynamic> data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Informasi Detail (${data['nama_wisata']})',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
-        ),
-        const SizedBox(height: 12),
-        if (data['alamat'] != null)
-          _buildDetailRow(Icons.location_on_outlined, 'Alamat', data['alamat']),
-        if (data['jam_buka'] != null)
-          _buildDetailRow(Icons.access_time_outlined, 'Jam Operasional', data['jam_buka']),
-        if (data['harga_tiket'] != null)
-          _buildDetailRow(Icons.money_outlined, 'Harga Tiket', 'Rp${data['harga_tiket']}'),
-      ],
-    );
-  }
-
-  Widget _buildReviewsContent(Map<String, dynamic> data) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Ulasan Pengunjung',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
-        ),
-        const SizedBox(height: 12),
-        const Text("Belum ada ulasan terbaru untuk wisata ini.", style: TextStyle(color: kHintColor)),
-      ],
-    );
-  }
-
   Widget _buildDetailRow(IconData icon, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.only(bottom: 16),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: kTeal, size: 20),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: kBlack)),
-              const SizedBox(height: 2),
-              SizedBox(
-                width: MediaQuery.of(context).size.width - 100,
-                child: Text(value, style: TextStyle(color: kBlack)),
-              ),
-            ],
+          Icon(icon, color: kTeal, size: 24),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: kPrimaryDark, fontSize: 16)),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: TextStyle(color: kBlack, fontSize: 14),
+                ),
+              ],
+            ),
           ),
         ],
       ),
@@ -549,7 +490,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
           icon: Icons.access_time_filled,
           color: kAccentRed,
           title: 'Duration',
-          value: data['jam_buka'] ?? '6 Days',
+          value: data['jam_buka'] ?? '8-17 WIB',
         ),
         _buildMetricItem(
           icon: Icons.location_on,
@@ -575,7 +516,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
           children: [
             Icon(icon, color: color, size: 18),
             const SizedBox(width: 4),
-            Text(value, style: TextStyle(color: kPrimaryDark, fontWeight: FontWeight.w600)),
+            Text(value, style: TextStyle(color: kPrimaryDark, fontWeight: FontWeight.w600, fontSize: 14)),
           ],
         ),
         const SizedBox(height: 4),

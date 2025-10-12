@@ -50,7 +50,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               _buildWelcomeText(),
               const SizedBox(height: 40),
 
-              // Form Input: Email
+              // Input Email
               _buildInputField(
                 label: 'Email',
                 hint: 'Enter your email',
@@ -59,7 +59,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Form Input: Password
+              // Input Password
               _buildPasswordField(
                 label: 'Password',
                 controller: _passwordController,
@@ -72,7 +72,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Form Input: Re-type Password
+              // Re-type Password
               _buildPasswordField(
                 label: 'Re-type Password',
                 controller: _retypePasswordController,
@@ -85,10 +85,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               const SizedBox(height: 40),
 
-              // Tombol Register
               _buildRegisterButton(context, authProvider),
 
-              // Tampilkan error message dari AuthProvider
+              // Error message
               if (authProvider.errorMessage != null && !authProvider.isLoading)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
@@ -98,6 +97,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     textAlign: TextAlign.center,
                   ),
                 ),
+
+              const SizedBox(height: 30),
+
+              // Teks "Or continue with"
+              _buildOrContinueWithText(),
+              const SizedBox(height: 20),
+
+              // Tombol Google Sign Up
+              _buildGoogleSignInButton(context),
 
               const SizedBox(height: 40),
 
@@ -133,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Create your new account and find\nmore beautiful destinations',
+          'create your new account and find\nmore beautiful destinations',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -178,7 +186,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: hint,
             hintStyle: TextStyle(color: kHintColor),
             filled: true,
-            fillColor: kWhite,
+            fillColor: const Color(0xFFF5F5F5),
             border: borderStyle,
             enabledBorder: borderStyle,
             focusedBorder: borderStyle,
@@ -222,7 +230,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             hintText: '••••••••',
             hintStyle: TextStyle(color: kHintColor),
             filled: true,
-            fillColor: kWhite,
+            fillColor: const Color(0xFFF5F5F5),
+
             border: borderStyle,
             enabledBorder: borderStyle,
             focusedBorder: borderStyle,
@@ -258,22 +267,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
 
-        // Panggil method signUp yang sebenarnya dari AuthProvider
         await authProvider.signUp(
           email: _emailController.text.trim(),
           password: _passwordController.text,
         );
-
-        // Redirect otomatis akan terjadi (ke /)
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: kPrimaryDark,
+        backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        elevation: 5,
-        shadowColor: kPrimaryDark.withOpacity(0.4),
+        elevation: 0,
       ),
       child: authProvider.isLoading
           ? const SizedBox(
@@ -282,12 +287,55 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
       )
           : const Text(
-        'Register',
+        'Sing Up',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
           color: kWhite,
         ),
+      ),
+    );
+  }
+
+  Widget _buildOrContinueWithText() {
+    return const Center(
+      child: Text(
+        'Or continue with',
+        style: TextStyle(
+          color: kHintColor,
+          fontSize: 16,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGoogleSignInButton(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () {
+        // Logic Sign in with Google
+      },
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 55),
+        side: BorderSide(color: kNeutralGrey.withOpacity(0.5), width: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        backgroundColor: kWhite,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/images/icons-google.png', height: 24),
+          const SizedBox(width: 12),
+          Text(
+            'Sing up with Google',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: kBlack,
+            ),
+          ),
+        ],
       ),
     );
   }

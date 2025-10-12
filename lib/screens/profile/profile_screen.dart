@@ -88,7 +88,6 @@ class ProfileScreen extends StatelessWidget {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final itineraryProvider = Provider.of<ItineraryProvider>(context);
 
-    // sinkronisasi jumlah favorit dan itinerary
     profileProvider.setFavoriteCount(favoriteProvider.favorites.length);
 
     final String userEmail = authProvider.userEmail.isNotEmpty ? authProvider.userEmail : "guest@example.com";
@@ -112,7 +111,6 @@ class ProfileScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 50,
                   backgroundColor: kPrimaryColor.withOpacity(0.1),
-                  // Gunakan NetworkImage jika URL tersedia, jika tidak gunakan placeholder
                   backgroundImage: avatarUrl != null
                       ? NetworkImage(avatarUrl)
                       : const NetworkImage('https://via.placeholder.com/150/3F52B4/FFFFFF?text=Profile') as ImageProvider,
@@ -220,9 +218,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // === LOGOUT BUTTON ===
+            // Logout Button
             _buildLogoutButton(context, authProvider),
-            const SizedBox(height: 50),
+            const SizedBox(height: 80),
           ],
         ),
       ),

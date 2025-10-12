@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
+import 'package:flutter/gestures.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -12,7 +13,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginScreen> {
-  // === TEXT FIELD CONTROLLERS ===
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -40,7 +40,6 @@ class _LoginPageState extends State<LoginScreen> {
 
     final double verticalPadding = screenHeight * 0.04;
 
-    // Akses AuthProvider untuk status loading dan error
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -63,16 +62,15 @@ class _LoginPageState extends State<LoginScreen> {
               _buildEmailField(),
               const SizedBox(height: 20),
               _buildPasswordField(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 20),
 
-              // Checkbox dan Tautan Forgot Password
-              _buildKeepSignedInAndForgotPwd(),
+              // Checkbox dan Tautan Kebijakan Privasi
+              _buildTermsAndConditions(),
               const SizedBox(height: 30),
 
               // Tombol Login
               _buildLoginButton(context, authProvider),
 
-              // Tampilkan error message dari AuthProvider
               if (authProvider.errorMessage != null && !authProvider.isLoading)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),
@@ -89,8 +87,9 @@ class _LoginPageState extends State<LoginScreen> {
               _buildOrContinueWithText(),
               const SizedBox(height: 20),
 
-              // Ikon Media Sosial
-              _buildSocialMediaIcons(),
+              // Ikon Google Login
+              _buildGoogleSignInButton(context),
+
               const SizedBox(height: 40),
 
               // Tautan Sign Up
@@ -157,7 +156,7 @@ class _LoginPageState extends State<LoginScreen> {
             hintText: 'Enter your email',
             hintStyle: TextStyle(color: kHintColor),
             filled: true,
-            fillColor: kWhite,
+            fillColor: const Color(0xFFF5F5F5),
             border: _inputBorderStyle,
             enabledBorder: _inputBorderStyle,
             focusedBorder: _inputBorderStyle,
@@ -188,7 +187,7 @@ class _LoginPageState extends State<LoginScreen> {
             hintText: '••••••••',
             hintStyle: TextStyle(color: kHintColor),
             filled: true,
-            fillColor: kWhite,
+            fillColor: const Color(0xFFF5F5F5),
             border: _inputBorderStyle,
             enabledBorder: _inputBorderStyle,
             focusedBorder: _inputBorderStyle,
@@ -210,45 +209,61 @@ class _LoginPageState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildKeepSignedInAndForgotPwd() {
+  Widget _buildTermsAndConditions() {
+    const TextStyle defaultStyle = TextStyle(
+      fontSize: 14,
+      color: kBlack,
+    );
+    final TextStyle linkStyle = TextStyle(
+      color: kTeal,
+      fontWeight: FontWeight.w600,
+      fontSize: 14,
+    );
+
+    // Fungsi "Perjanjian Pengguna & Kebijakan Privasi"
+    void handleLinkTap(String link) {
+      debugPrint('Navigasi ke link: $link');
+      //
+    }
+
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            SizedBox(
-              width: 24.0,
-              height: 24.0,
-              child: Checkbox(
-                value: _isChecked,
-                activeColor: kPrimaryColor,
-                onChanged: (bool? value) {
-                  setState(() {
-                    _isChecked = value!;
-                  });
-                },
-              ),
+        SizedBox(
+          width: 24.0,
+          height: 24.0,
+          child: Checkbox(
+            value: _isChecked,
+            activeColor: kTeal,
+            onChanged: (bool? value) {
+              setState(() {
+                _isChecked = value!;
+              });
+            },
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(4),
             ),
-            const SizedBox(width: 8.0),
-            const Text(
-              'Keep me signed in',
-              style: TextStyle(
-                fontSize: 14,
-                color: kBlack,
-              ),
-            ),
-          ],
+          ),
         ),
-        TextButton(
-          onPressed: () {
-            // Lupa Password
-          },
-          child: const Text(
-            'Forgot password?',
-            style: TextStyle(
-              fontSize: 14,
-              color: kTeal,
-              fontWeight: FontWeight.bold,
+        const SizedBox(width: 8.0),
+
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            child: RichText(
+              textAlign: TextAlign.left,
+              text: TextSpan(
+                text: "Saya telah membaca dan menyetujui ",
+                style: defaultStyle,
+                children: <InlineSpan>[
+                  TextSpan(
+                    text: 'Perjanjian Pengguna & Kebijakan Privasi',
+                    style: linkStyle,
+                    recognizer: TapGestureRecognizer()..onTap = () => handleLinkTap('Perjanjian & Kebijakan'),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -258,7 +273,6 @@ class _LoginPageState extends State<LoginScreen> {
 
   Widget _buildLoginButton(BuildContext context, AuthProvider authProvider) {
     return ElevatedButton(
-      // Nonaktifkan tombol jika sedang loading
       onPressed: authProvider.isLoading ? null : () async {
         if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -267,25 +281,21 @@ class _LoginPageState extends State<LoginScreen> {
           return;
         }
 
-        // Panggil method signIn yang sebenarnya dari AuthProvider
         await authProvider.signIn(
-          email: _emailController.text.trim(), // Trim spasi
+          email: _emailController.text.trim(),
           password: _passwordController.text,
         );
-
-        // Redirect otomatis akan terjadi karena GoRouter mendengarkan AuthProvider
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: kPrimaryDark,
+        backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
         ),
-        elevation: 5,
-        shadowColor: kPrimaryColor.withOpacity(0.4),
+        elevation: 0,
       ),
       child: authProvider.isLoading
-          ? const SizedBox( // Tampilkan loading spinner
+          ? const SizedBox(
         width: 24,
         height: 24,
         child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
@@ -313,24 +323,34 @@ class _LoginPageState extends State<LoginScreen> {
     );
   }
 
-  Widget _buildSocialMediaIcons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        _buildSocialIcon('assets/images/icons-facebook.png'),
-        const SizedBox(width: 35),
-        _buildSocialIcon('assets/images/icons-google.png'),
-        const SizedBox(width: 35),
-        _buildSocialIcon('assets/images/icons-twitter.png'),
-      ],
-    );
-  }
-
-  Widget _buildSocialIcon(String assetPath) {
-    return Image.asset(
-      assetPath,
-      width: 30,
-      height: 30,
+  Widget _buildGoogleSignInButton(BuildContext context) {
+    return OutlinedButton(
+      onPressed: () {
+        // Logic Sign in with Google
+      },
+      style: OutlinedButton.styleFrom(
+        minimumSize: const Size(double.infinity, 55),
+        side: BorderSide(color: kNeutralGrey.withOpacity(0.5), width: 1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        backgroundColor: kWhite,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset('assets/images/icons-google.png', height: 24),
+          const SizedBox(width: 12),
+          Text(
+            'Sing in with Google',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: kBlack,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
