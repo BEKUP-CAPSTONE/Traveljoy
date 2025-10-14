@@ -316,7 +316,7 @@ class _LoginPageState extends State<LoginScreen> {
     return OutlinedButton(
       onPressed: () async {
         final auth = context.read<AuthProvider>();
-        final success = await auth.signInWithGoogle();
+        final success = await auth.nativeGoogleSignIn();
 
         if (success) {
           context.go('/'); // langsung ke home
