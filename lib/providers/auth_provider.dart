@@ -58,6 +58,7 @@ class AuthProvider with ChangeNotifier {
       debugPrint('❌ [Auth] Gagal memastikan profile user: $e');
     }
   }
+
   /// ---------------- Email Sign Up ----------------
 
   Future<bool> signUp({required String email, required String password}) async {
@@ -148,6 +149,35 @@ class AuthProvider with ChangeNotifier {
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+  Future<bool> nativeGoogleSignIn() async {
+    ///
+    const webClientId =
+        '678803397247-srlgok1o6iplsn2cl80drjpn7loegn0m.apps.googleusercontent.com';
+
+    final scopes = ['email', 'profile'];
+    final googleSignIn = GoogleSignIn.instance;
+    await googleSignIn.initialize(serverClientId: webClientId);
+    final googleUser = await googleSignIn.authenticate();
+
+    /// Authorization is required to obtain the access token with the appropriate scopes for Supabase authentication,
+    /// while also granting permission to access user information.
+    final authorization =
+        await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+        await googleUser.authorizationClient.authorizeScopes(scopes);
+    final idToken = googleUser.authentication.idToken;
+    if (idToken == null) {
+      throw AuthException('No ID Token found.');
+    }
+    return await supabase.auth
+        .signInWithIdToken(
+          provider: OAuthProvider.google,
+          idToken: idToken,
+          accessToken: authorization.accessToken,
+        )
+        .then((value) => true)
+        .onError((error, stackTrace) => false);
   }
 }
 

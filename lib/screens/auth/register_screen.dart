@@ -93,7 +93,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     authProvider.errorMessage!,
-                    style: TextStyle(color: kAccentRed, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: kAccentRed,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -118,7 +121,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget  _buildMainIcon() {
+  Widget _buildMainIcon() {
     return Center(
       child: Image.asset(
         'assets/images/logo_full.png',
@@ -143,10 +146,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         Text(
           'Temukan berbagai perjalanan wisata menarik hanya dalam genggamanmu!',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            color: kHintColor,
-          ),
+          style: TextStyle(fontSize: 16, color: kHintColor),
         ),
       ],
     );
@@ -160,10 +160,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }) {
     final OutlineInputBorder borderStyle = OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide(
-        color: kHintColor.withOpacity(0.5),
-        width: 1.0,
-      ),
+      borderSide: BorderSide(color: kHintColor.withOpacity(0.5), width: 1.0),
     );
 
     return Column(
@@ -204,10 +201,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }) {
     final OutlineInputBorder borderStyle = OutlineInputBorder(
       borderRadius: BorderRadius.circular(16),
-      borderSide: BorderSide(
-        color: kHintColor.withOpacity(0.5),
-        width: 1.0,
-      ),
+      borderSide: BorderSide(color: kHintColor.withOpacity(0.5), width: 1.0),
     );
 
     return Column(
@@ -252,60 +246,57 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildRegisterButton(BuildContext context, AuthProvider authProvider) {
     return ElevatedButton(
-      onPressed: authProvider.isLoading ? null : () async {
-        if (_passwordController.text != _retypePasswordController.text) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password tidak cocok.')),
-          );
-          return;
-        }
+      onPressed: authProvider.isLoading
+          ? null
+          : () async {
+              if (_passwordController.text != _retypePasswordController.text) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password tidak cocok.')),
+                );
+                return;
+              }
 
-        if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email dan Password wajib diisi.')),
-          );
-          return;
-        }
+              if (_emailController.text.isEmpty ||
+                  _passwordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Email dan Password wajib diisi.'),
+                  ),
+                );
+                return;
+              }
 
-        await authProvider.signUp(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-      },
+              await authProvider.signUp(
+                email: _emailController.text.trim(),
+                password: _passwordController.text,
+              );
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
       ),
       child: authProvider.isLoading
           ? const SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
-      )
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+            )
           : const Text(
-        'Daftar',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: kWhite,
-        ),
-      ),
+              'Daftar',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: kWhite,
+              ),
+            ),
     );
   }
 
   Widget _buildOrContinueWithText() {
     return const Center(
-      child: Text(
-        'Atau',
-        style: TextStyle(
-          color: kHintColor,
-          fontSize: 16,
-        ),
-      ),
+      child: Text('Atau', style: TextStyle(color: kHintColor, fontSize: 16)),
     );
   }
 
@@ -313,7 +304,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return OutlinedButton(
       onPressed: () async {
         final auth = context.read<AuthProvider>();
-        final success = await auth.signInWithGoogle();
+        final success = await auth.nativeGoogleSignIn();
 
         if (success) {
           context.go('/login'); // langsung ke home
@@ -326,9 +317,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 55),
         side: BorderSide(color: kNeutralGrey.withOpacity(0.5), width: 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: kWhite,
       ),
       child: Row(
@@ -355,10 +344,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         textAlign: TextAlign.center,
         text: TextSpan(
           text: "Sudah memiliki akun? ",
-          style: TextStyle(
-            color: kBlack,
-            fontSize: 16,
-          ),
+          style: TextStyle(color: kBlack, fontSize: 16),
           children: <InlineSpan>[
             WidgetSpan(
               child: InkWell(
