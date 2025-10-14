@@ -53,7 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               // Input Email
               _buildInputField(
                 label: 'Email',
-                hint: 'Enter your email',
+                hint: 'Masukkan Email Anda',
                 keyboardType: TextInputType.emailAddress,
                 controller: _emailController,
               ),
@@ -61,7 +61,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               // Input Password
               _buildPasswordField(
-                label: 'Password',
+                label: 'Sandi',
                 controller: _passwordController,
                 isPasswordVisible: _isPasswordVisible,
                 onToggleVisibility: (isVisible) {
@@ -74,7 +74,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
               // Re-type Password
               _buildPasswordField(
-                label: 'Re-type Password',
+                label: 'Ulangi Sandi anda',
                 controller: _retypePasswordController,
                 isPasswordVisible: _isRetypePasswordVisible,
                 onToggleVisibility: (isVisible) {
@@ -98,16 +98,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
 
               // Teks "Or continue with"
               _buildOrContinueWithText(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
               // Tombol Google Sign Up
               _buildGoogleSignInButton(context),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // Tautan Sign In
               _buildSignUpText(context),
@@ -118,10 +118,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  Widget _buildMainIcon() {
+  Widget  _buildMainIcon() {
     return Center(
       child: Image.asset(
-        'assets/images/logo.png',
+        'assets/images/logo_full.png',
         width: 100,
         height: 100,
       ),
@@ -132,7 +132,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Column(
       children: [
         Text(
-          'Let\'s Get Started',
+          'Daftar yuk',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -141,7 +141,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'create your new account and find\nmore beautiful destinations',
+          'Temukan berbagai perjalanan wisata menarik hanya dalam genggamanmu!',
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 16,
@@ -287,7 +287,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
       )
           : const Text(
-        'Sing Up',
+        'Daftar',
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
@@ -300,7 +300,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget _buildOrContinueWithText() {
     return const Center(
       child: Text(
-        'Or continue with',
+        'Atau',
         style: TextStyle(
           color: kHintColor,
           fontSize: 16,
@@ -311,8 +311,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildGoogleSignInButton(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {
-        // Logic Sign in with Google
+      onPressed: () async {
+        final auth = context.read<AuthProvider>();
+        final success = await auth.signInWithGoogle();
+
+        if (success) {
+          context.go('/login'); // langsung ke home
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(auth.errorMessage ?? 'Login Google gagal')),
+          );
+        }
       },
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 55),
@@ -328,7 +337,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           Image.asset('assets/images/icons-google.png', height: 24),
           const SizedBox(width: 12),
           Text(
-            'Sing up with Google',
+            'Lanjutkan dengan Google',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -345,7 +354,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          text: "Already have an account? ",
+          text: "Sudah memiliki akun? ",
           style: TextStyle(
             color: kBlack,
             fontSize: 16,
@@ -357,7 +366,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   context.go('/login');
                 },
                 child: Text(
-                  'Sign In',
+                  'Masuk',
                   style: TextStyle(
                     color: kTeal,
                     fontWeight: FontWeight.bold,

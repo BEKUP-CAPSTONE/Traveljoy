@@ -21,10 +21,7 @@ class _LoginPageState extends State<LoginScreen> {
 
   final OutlineInputBorder _inputBorderStyle = OutlineInputBorder(
     borderRadius: BorderRadius.circular(16),
-    borderSide: BorderSide(
-      color: kHintColor.withOpacity(0.5),
-      width: 1.0,
-    ),
+    borderSide: BorderSide(color: kHintColor.withOpacity(0.5), width: 1.0),
   );
 
   @override
@@ -76,21 +73,24 @@ class _LoginPageState extends State<LoginScreen> {
                   padding: const EdgeInsets.only(top: 10),
                   child: Text(
                     authProvider.errorMessage!,
-                    style: TextStyle(color: kAccentRed, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      color: kAccentRed,
+                      fontWeight: FontWeight.bold,
+                    ),
                     textAlign: TextAlign.center,
                   ),
                 ),
 
-              const SizedBox(height: 30),
+              const SizedBox(height: 10),
 
               // Teks "Or continue with"
               _buildOrContinueWithText(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
 
               // Ikon Google Login
               _buildGoogleSignInButton(context),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // Tautan Sign Up
               _buildSignUpText(context),
@@ -104,7 +104,7 @@ class _LoginPageState extends State<LoginScreen> {
   Widget _buildMainIcon() {
     return Center(
       child: Image.asset(
-        'assets/images/logo.png',
+        'assets/images/logo_full.png',
         width: 100,
         height: 100,
       ),
@@ -115,7 +115,7 @@ class _LoginPageState extends State<LoginScreen> {
     return Column(
       children: [
         const Text(
-          'Welcome Back !',
+          'Haloo',
           style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
@@ -124,12 +124,9 @@ class _LoginPageState extends State<LoginScreen> {
         ),
         const SizedBox(height: 8),
         Text(
-          'Stay signed in with your account to\nmake searching easier',
+          'Masuk lagi ke akun anda, dan ayo buat perjalanan yang seru',
           textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            color: kHintColor,
-          ),
+          style: TextStyle(fontSize: 16, color: kHintColor),
         ),
       ],
     );
@@ -153,7 +150,7 @@ class _LoginPageState extends State<LoginScreen> {
           keyboardType: TextInputType.emailAddress,
           style: const TextStyle(color: kBlack),
           decoration: InputDecoration(
-            hintText: 'Enter your email',
+            hintText: 'Masukkan email anda',
             hintStyle: TextStyle(color: kHintColor),
             filled: true,
             fillColor: const Color(0xFFF5F5F5),
@@ -171,7 +168,7 @@ class _LoginPageState extends State<LoginScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          'Password',
+          'Sandi',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,
@@ -210,21 +207,12 @@ class _LoginPageState extends State<LoginScreen> {
   }
 
   Widget _buildTermsAndConditions() {
-    const TextStyle defaultStyle = TextStyle(
-      fontSize: 14,
-      color: kBlack,
-    );
+    const TextStyle defaultStyle = TextStyle(fontSize: 14, color: kBlack);
     final TextStyle linkStyle = TextStyle(
       color: kTeal,
       fontWeight: FontWeight.w600,
       fontSize: 14,
     );
-
-    // Fungsi "Perjanjian Pengguna & Kebijakan Privasi"
-    void handleLinkTap(String link) {
-      debugPrint('Navigasi ke link: $link');
-      //
-    }
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -260,7 +248,11 @@ class _LoginPageState extends State<LoginScreen> {
                   TextSpan(
                     text: 'Perjanjian Pengguna & Kebijakan Privasi',
                     style: linkStyle,
-                    recognizer: TapGestureRecognizer()..onTap = () => handleLinkTap('Perjanjian & Kebijakan'),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        debugPrint("Navigasi ke halaman Terms");
+                        context.push('/terms');
+                      },
                   ),
                 ],
               ),
@@ -273,67 +265,71 @@ class _LoginPageState extends State<LoginScreen> {
 
   Widget _buildLoginButton(BuildContext context, AuthProvider authProvider) {
     return ElevatedButton(
-      onPressed: authProvider.isLoading ? null : () async {
-        if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Email dan Password wajib diisi.')),
-          );
-          return;
-        }
+      onPressed: authProvider.isLoading
+          ? null
+          : () async {
+              if (_emailController.text.isEmpty ||
+                  _passwordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Email dan Password wajib diisi.'),
+                  ),
+                );
+                return;
+              }
 
-        await authProvider.signIn(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-      },
+              await authProvider.signIn(
+                email: _emailController.text.trim(),
+                password: _passwordController.text,
+              );
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         elevation: 0,
       ),
       child: authProvider.isLoading
           ? const SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
-      )
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+            )
           : const Text(
-        'Login',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: kWhite,
-        ),
-      ),
+              'Masuk',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: kWhite,
+              ),
+            ),
     );
   }
 
   Widget _buildOrContinueWithText() {
     return const Center(
-      child: Text(
-        'Or continue with',
-        style: TextStyle(
-          color: kHintColor,
-          fontSize: 16,
-        ),
-      ),
+      child: Text('Atau', style: TextStyle(color: kHintColor, fontSize: 16)),
     );
   }
 
   Widget _buildGoogleSignInButton(BuildContext context) {
     return OutlinedButton(
-      onPressed: () {
-        // Logic Sign in with Google
+      onPressed: () async {
+        final auth = context.read<AuthProvider>();
+        final success = await auth.signInWithGoogle();
+
+        if (success) {
+          context.go('/'); // langsung ke home
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(auth.errorMessage ?? 'Login Google gagal')),
+          );
+        }
       },
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 55),
         side: BorderSide(color: kNeutralGrey.withOpacity(0.5), width: 1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: kWhite,
       ),
       child: Row(
@@ -342,7 +338,7 @@ class _LoginPageState extends State<LoginScreen> {
           Image.asset('assets/images/icons-google.png', height: 24),
           const SizedBox(width: 12),
           Text(
-            'Sing in with Google',
+            'Lanjutkan dengan Google',
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
@@ -359,11 +355,8 @@ class _LoginPageState extends State<LoginScreen> {
       child: RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
-          text: "You don't Have an account? ",
-          style: TextStyle(
-            color: kBlack,
-            fontSize: 16,
-          ),
+          text: "Anda tidak memiliki akun? ",
+          style: TextStyle(color: kBlack, fontSize: 16),
           children: <InlineSpan>[
             WidgetSpan(
               child: InkWell(
@@ -371,7 +364,7 @@ class _LoginPageState extends State<LoginScreen> {
                   context.go('/register');
                 },
                 child: Text(
-                  'Sign Up',
+                  'Daftar',
                   style: TextStyle(
                     color: kTeal,
                     fontWeight: FontWeight.bold,
