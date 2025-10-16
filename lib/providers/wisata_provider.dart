@@ -36,7 +36,7 @@ class WisataProvider extends ChangeNotifier {
       final response = await supabase
           .from('wisata')
           .select('id, nama_wisata, deskripsi_wisata, gambar_url')
-          .limit(10);
+          .limit(6);
 
       _wisata = List<Map<String, dynamic>>.from(response);
     } catch (e) {

@@ -1,46 +1,51 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../../providers/itinerary_provider.dart';
+import 'package:go_router/go_router.dart';
 
 class ItineraryScreen extends StatelessWidget {
   const ItineraryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final itineraryProvider = Provider.of<ItineraryProvider>(context);
-
-    final inputController = TextEditingController();
-
     return Scaffold(
-      appBar: AppBar(title: const Text("Itinerary")),
+      appBar: AppBar(
+        title: const Text('Itinerary'),
+        centerTitle: true,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: inputController,
-              decoration: const InputDecoration(
-                labelText: "Masukkan kebutuhan perjalanan",
+            ElevatedButton.icon(
+              onPressed: () {
+                context.push('/itinerary/input');
+              },
+              icon: const Icon(Icons.add),
+              label: const Text('Buat Itinerary Baru'),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
               ),
             ),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: () {
-                if (inputController.text.isNotEmpty) {
-                  itineraryProvider.generateItinerary(inputController.text);
-                  inputController.clear();
-                }
-              },
-              child: const Text("Generate Itinerary"),
+            const SizedBox(height: 24),
+            const Text(
+              'Riwayat Itinerary',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
-            const Divider(),
-            const Text("History"),
+            const SizedBox(height: 12),
             Expanded(
               child: ListView.builder(
-                itemCount: itineraryProvider.history.length,
+                itemCount: 3, // nanti diganti dari database
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(itineraryProvider.history[index]),
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: ListTile(
+                      title: Text('Itinerary ${index + 1}'),
+                      subtitle: const Text('Jakarta • 3 hari'),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                      onTap: () {
+                        context.push('/itinerary/result');
+                      },
+                    ),
                   );
                 },
               ),

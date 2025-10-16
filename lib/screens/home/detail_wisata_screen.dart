@@ -185,7 +185,7 @@ import '../../core/constants/app_colors.dart';
 
 class DetailWisataScreen extends StatefulWidget {
   final int id;
-  const DetailWisataScreen({super.key, required final this.id});
+  const DetailWisataScreen({super.key, required this.id});
 
   @override
   State<DetailWisataScreen> createState() => _DetailWisataScreenState();

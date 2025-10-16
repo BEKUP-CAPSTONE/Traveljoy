@@ -9,10 +9,11 @@ import 'package:traveljoy/screens/favorite/favorite_screen.dart';
 import 'package:traveljoy/screens/home/daerah_screen.dart';
 import 'package:traveljoy/screens/home/wisata_daerah_screen.dart';
 import 'package:traveljoy/screens/onboarding/onboarding_screen.dart';
+import '../screens/itinerary/itinerary_screen.dart';
 import '../screens/main_navigation.dart';
 import '../screens/home/detail_wisata_screen.dart';
 import '../screens/itinerary/itinerary_result_screen.dart';
-import '../screens/itinerary/itinerary_history_screen.dart';
+import '../screens/itinerary/itinerary_input_screen.dart';
 
 class AppRouter {
   static GoRouter createRouter(AuthProvider authProvider, OnboardingProvider onboardingProvider) {
@@ -25,6 +26,9 @@ class AppRouter {
         GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
         GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
         GoRoute(path: '/terms',builder: (context, state) => const TermsScreen()),
+        GoRoute(path: '/itinerary', builder: (context, state) => const ItineraryScreen()),
+        GoRoute(path: '/itinerary/input', builder: (context, state) => const ItineraryInputScreen()),
+        GoRoute(path: '/itinerary/result', builder: (context, state) => const ItineraryResultScreen()),
         GoRoute(path: '/daerah', builder: (context, state) => const DaerahScreen()),
         GoRoute(path: '/wisata-daerah/:id',
           builder: (context, state) {

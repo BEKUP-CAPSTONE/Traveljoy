@@ -10,6 +10,7 @@ import 'providers/itinerary_provider.dart';
 import 'providers/favorite_provider.dart';
 import 'providers/profile_provider.dart';
 import 'core/constants/secrets.dart';
+import 'package:flutter/services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,6 +18,10 @@ Future<void> main() async {
   // print('🔗 Supabase URL: ${Secrets.supabaseUrl}');
   // print('🔑 Supabase Anon Key: ${Secrets.supabaseAnonKey.substring(0, 10)}...');
 
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    statusBarIconBrightness: Brightness.dark,
+  ));
   await Supabase.initialize(
     url: Secrets.supabaseUrl,
     anonKey: Secrets.supabaseAnonKey,

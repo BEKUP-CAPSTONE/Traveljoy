@@ -30,18 +30,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<OnboardingContent> _onboardingData = [
     OnboardingContent(
       imagePath: 'assets/images/onboarding1.jpeg',
-      title: 'Unforgettable Journey',
-      description: 'Access thousands of interesting places and make your plans that easy',
+      title: 'Perjalanan Tak Terlupakan',
+      description: 'Jelajahi ribuan tempat menarik dan rencanakan liburanmu dengan mudah.',
     ),
     OnboardingContent(
       imagePath: 'assets/images/onboarding2.jpeg',
-      title: 'New Place, New Story',
-      description: 'From mountain tops to city corners, we have the best recommendations for you',
+      title: 'Tempat Baru, Cerita Baru',
+      description: 'Dari puncak gunung sampai sudut kota, kami punya rekomendasi terbaik untukmu.',
     ),
     OnboardingContent(
       imagePath: 'assets/images/onboarding3.jpeg',
-      title: 'Start Your Adventure Now',
-      description: 'Break boundaries and create beautiful memories on every journey',
+      title: 'Mulai Petualanganmu Sekarang',
+      description: 'Buka pengalaman baru dan ciptakan kenangan indah di setiap perjalanan.',
     ),
   ];
 
