@@ -773,7 +773,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
               return GestureDetector(
                 onTap: () {
-                  context.push('/wisata-daerah/${kategori['id']}');
+                  context.push('/wisata-kategori/${kategori['id']}/${kategori['nama_kategori']}');
                 },
                 child: Container(
                   width: 80,

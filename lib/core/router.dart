@@ -9,6 +9,7 @@ import 'package:traveljoy/screens/favorite/favorite_screen.dart';
 import 'package:traveljoy/screens/home/daerah_screen.dart';
 import 'package:traveljoy/screens/home/wisata_daerah_screen.dart';
 import 'package:traveljoy/screens/onboarding/onboarding_screen.dart';
+import '../screens/home/wisata_kategori_screen.dart';
 import '../screens/itinerary/itinerary_screen.dart';
 import '../screens/main_navigation.dart';
 import '../screens/home/detail_wisata_screen.dart';
@@ -16,7 +17,10 @@ import '../screens/itinerary/itinerary_result_screen.dart';
 import '../screens/itinerary/itinerary_input_screen.dart';
 
 class AppRouter {
-  static GoRouter createRouter(AuthProvider authProvider, OnboardingProvider onboardingProvider) {
+  static GoRouter createRouter(
+    AuthProvider authProvider,
+    OnboardingProvider onboardingProvider,
+  ) {
     return GoRouter(
       initialLocation: '/',
       refreshListenable: Listenable.merge([authProvider, onboardingProvider]),
@@ -25,7 +29,10 @@ class AppRouter {
           path: '/',
           builder: (context, state) => const MainNavigation(),
           routes: [
-            GoRoute(path: 'itinerary/input', builder: (context, state) => const ItineraryInputScreen()),
+            GoRoute(
+              path: 'itinerary/input',
+              builder: (context, state) => const ItineraryInputScreen(),
+            ),
             GoRoute(
               path: '/itinerary/result',
               builder: (context, state) {
@@ -36,30 +43,59 @@ class AppRouter {
             ),
           ],
         ),
-        GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
-        GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
-        GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
-        GoRoute(path: '/terms',builder: (context, state) => const TermsScreen()),
-        GoRoute(path: '/daerah', builder: (context, state) => const DaerahScreen()),
-        GoRoute(path: '/wisata-daerah/:id',
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => const OnboardingScreen(),
+        ),
+        GoRoute(
+          path: '/login',
+          builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/register',
+          builder: (context, state) => const RegisterScreen(),
+        ),
+        GoRoute(
+          path: '/terms',
+          builder: (context, state) => const TermsScreen(),
+        ),
+        GoRoute(
+          path: '/daerah',
+          builder: (context, state) => const DaerahScreen(),
+        ),
+        GoRoute(
+          path: '/wisata-daerah/:id',
           builder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
             return WisataDaerahScreen(idDaerah: id);
           },
         ),
-        GoRoute(path: '/detail-wisata/:id',
+        GoRoute(
+          path: '/wisata-kategori/:id/:nama',
+          builder: (context, state) {
+            final id = int.parse(state.pathParameters['id']!);
+            final nama = state.pathParameters['nama']!;
+            return WisataKategoriScreen(idKategori: id, namaKategori: nama);
+          },
+        ),
+        GoRoute(
+          path: '/detail-wisata/:id',
           builder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
             return DetailWisataScreen(id: id);
           },
         ),
-        GoRoute(path: '/favorites',builder: (context, state) => const FavoriteScreen()),
-
+        GoRoute(
+          path: '/favorites',
+          builder: (context, state) => const FavoriteScreen(),
+        ),
       ],
       redirect: (context, state) {
         final loggedIn = authProvider.isLoggedIn;
         final hasSeenOnboarding = onboardingProvider.hasSeenOnboarding;
-        final loggingIn = state.matchedLocation == '/login' || state.matchedLocation == '/register';
+        final loggingIn =
+            state.matchedLocation == '/login' ||
+            state.matchedLocation == '/register';
         final onboarding = state.matchedLocation == '/onboarding';
 
         if (!hasSeenOnboarding && !onboarding) {
@@ -77,17 +113,17 @@ class AppRouter {
   }
 }
 
-    // GoRoute(
-    //   path: '/detail-wisata',
-    //   builder: (context, state) => const DetailWisataScreen(),
-    // ),
-    //
-    // GoRoute(
-    //   path: '/itinerary-result',
-    //   builder: (context, state) => const ItineraryResultScreen(),
-    // ),
-    //
-    // GoRoute(
-    //   path: '/itinerary-history',
-    //   builder: (context, state) => const ItineraryHistoryScreen(),
-    // ),
+// GoRoute(
+//   path: '/detail-wisata',
+//   builder: (context, state) => const DetailWisataScreen(),
+// ),
+//
+// GoRoute(
+//   path: '/itinerary-result',
+//   builder: (context, state) => const ItineraryResultScreen(),
+// ),
+//
+// GoRoute(
+//   path: '/itinerary-history',
+//   builder: (context, state) => const ItineraryHistoryScreen(),
+// ),

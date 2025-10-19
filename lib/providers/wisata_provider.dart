@@ -28,6 +28,32 @@ class WisataProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchWisataByKategori(int idKategori) async {
+    try {
+      debugPrint('🔍 [WisataProvider] Ambil wisata untuk kategori ID: $idKategori');
+      _isLoading = true;
+      notifyListeners();
+
+      final response = await supabase
+          .from('wisata')
+          .select('id, nama_wisata, deskripsi_wisata, gambar_url, alamat')
+          .eq('id_kategori', idKategori)
+          .order('created_at', ascending: false);
+
+      final List<Map<String, dynamic>> data =
+      List<Map<String, dynamic>>.from(response);
+
+      debugPrint('✅ [WisataProvider] Berhasil ambil ${data.length} data wisata.');
+      return data;
+    } catch (e) {
+      debugPrint('❌ [WisataProvider] Gagal ambil wisata by kategori: $e');
+      return [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchRandomWisata() async {
     try {
       _isLoading = true;
