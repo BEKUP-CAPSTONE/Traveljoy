@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "734061247705",
+    "project_id": "traveljoy-81ef6",
+    "storage_bucket": "traveljoy-81ef6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:734061247705:android:26a710ef473716513bd2c8",
+        "android_client_info": {
+          "package_name": "com.bekup.traveljoy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd8ev48lZwTQbTMZFRF_kWV4YGuaE3WGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

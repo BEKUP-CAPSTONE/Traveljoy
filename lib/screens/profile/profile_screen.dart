@@ -49,7 +49,6 @@
 //   }
 // }
 
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -90,7 +89,9 @@ class ProfileScreen extends StatelessWidget {
 
     profileProvider.setFavoriteCount(favoriteProvider.favorites.length);
 
-    final String userEmail = authProvider.userEmail.isNotEmpty ? authProvider.userEmail : "guest@example.com";
+    final String userEmail = authProvider.userEmail.isNotEmpty
+        ? authProvider.userEmail
+        : "guest@example.com";
     final String userNameDisplay = _getUserName(authProvider);
     final String? avatarUrl = _getUserAvatarUrl(authProvider);
 
@@ -113,32 +114,35 @@ class ProfileScreen extends StatelessWidget {
                   backgroundColor: kPrimaryColor.withOpacity(0.1),
                   backgroundImage: avatarUrl != null
                       ? NetworkImage(avatarUrl)
-                      : const NetworkImage('https://via.placeholder.com/150/3F52B4/FFFFFF?text=Profile') as ImageProvider,
+                      : const NetworkImage(
+                              'https://via.placeholder.com/150/3F52B4/FFFFFF?text=Profile',
+                            )
+                            as ImageProvider,
                   child: avatarUrl == null
                       ? Icon(
-                    Icons.person,
-                    size: 60,
-                    color: kPrimaryColor.withOpacity(0.7),
-                  )
+                          Icons.person,
+                          size: 60,
+                          color: kPrimaryColor.withOpacity(0.7),
+                        )
                       : null,
                 ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: Container(
-                    padding: const EdgeInsets.all(4),
-                    decoration: BoxDecoration(
-                      color: kTeal,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: kWhite, width: 2),
-                    ),
-                    child: Icon(
-                      Icons.camera_alt,
-                      color: kWhite,
-                      size: 18,
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   bottom: 0,
+                //   right: 0,
+                //   child: Container(
+                //     padding: const EdgeInsets.all(4),
+                //     decoration: BoxDecoration(
+                //       color: kTeal,
+                //       shape: BoxShape.circle,
+                //       border: Border.all(color: kWhite, width: 2),
+                //     ),
+                //     child: Icon(
+                //       Icons.camera_alt,
+                //       color: kWhite,
+                //       size: 18,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 12),
@@ -151,21 +155,15 @@ class ProfileScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 4),
-            Text(
-              userEmail,
-              style: TextStyle(
-                fontSize: 16,
-                color: kHintColor,
-              ),
-            ),
+            Text(userEmail, style: TextStyle(fontSize: 16, color: kHintColor)),
             const SizedBox(height: 30),
 
             _buildStatCounts(
-              itineraryCount: itineraryProvider.history.length,
+              // itineraryCount: itineraryProvider.history.length,
+              itineraryCount: 1,
               favoriteCount: profileProvider.favoriteCount,
             ),
             const SizedBox(height: 30),
-
 
             // Daftar menu
             _buildProfileOption(
@@ -176,46 +174,46 @@ class ProfileScreen extends StatelessWidget {
                 debugPrint('Navigasi ke Personal Info');
               },
             ),
-            _buildProfileOption(
-              context,
-              icon: Icons.travel_explore_outlined,
-              title: 'Travel Preferences',
-              onTap: () {
-                debugPrint('Navigasi ke Travel Preferences');
-              },
-            ),
-            _buildProfileOption(
-              context,
-              icon: Icons.history,
-              title: 'History (Trip)',
-              onTap: () {
-                debugPrint('Navigasi ke History Trip');
-              },
-            ),
-            _buildProfileOption(
-              context,
-              icon: Icons.lock_outline,
-              title: 'Account & Security',
-              onTap: () {
-                debugPrint('Navigasi ke Account & Security');
-              },
-            ),
-            _buildProfileOption(
-              context,
-              icon: Icons.payment_outlined,
-              title: 'Payment Methods',
-              onTap: () {
-                debugPrint('Navigasi ke Payment Methods');
-              },
-            ),
-            _buildProfileOption(
-              context,
-              icon: Icons.language,
-              title: 'App Language',
-              onTap: () {
-                debugPrint('Navigasi ke App Language');
-              },
-            ),
+            // _buildProfileOption(
+            //   context,
+            //   icon: Icons.travel_explore_outlined,
+            //   title: 'Travel Preferences',
+            //   onTap: () {
+            //     debugPrint('Navigasi ke Travel Preferences');
+            //   },
+            // ),
+            // _buildProfileOption(
+            //   context,
+            //   icon: Icons.history,
+            //   title: 'History (Trip)',
+            //   onTap: () {
+            //     debugPrint('Navigasi ke History Trip');
+            //   },
+            // ),
+            // _buildProfileOption(
+            //   context,
+            //   icon: Icons.lock_outline,
+            //   title: 'Account & Security',
+            //   onTap: () {
+            //     debugPrint('Navigasi ke Account & Security');
+            //   },
+            // ),
+            // _buildProfileOption(
+            //   context,
+            //   icon: Icons.payment_outlined,
+            //   title: 'Payment Methods',
+            //   onTap: () {
+            //     debugPrint('Navigasi ke Payment Methods');
+            //   },
+            // ),
+            // _buildProfileOption(
+            //   context,
+            //   icon: Icons.language,
+            //   title: 'App Language',
+            //   onTap: () {
+            //     debugPrint('Navigasi ke App Language');
+            //   },
+            // ),
             const SizedBox(height: 30),
 
             // Logout Button
@@ -227,7 +225,10 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCounts({required int itineraryCount, required int favoriteCount}) {
+  Widget _buildStatCounts({
+    required int itineraryCount,
+    required int favoriteCount,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -236,11 +237,7 @@ class ProfileScreen extends StatelessWidget {
           label: 'Itinerary dibuat',
           icon: Icons.calendar_month,
         ),
-        Container(
-          height: 50,
-          width: 1,
-          color: kNeutralGrey.withOpacity(0.5),
-        ),
+        Container(height: 50, width: 1, color: kNeutralGrey.withOpacity(0.5)),
         _buildStatItem(
           value: favoriteCount.toString(),
           label: 'Wisata favorit',
@@ -250,7 +247,11 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem({required String value, required String label, required IconData icon}) {
+  Widget _buildStatItem({
+    required String value,
+    required String label,
+    required IconData icon,
+  }) {
     return Column(
       children: [
         Row(
@@ -268,18 +269,17 @@ class ProfileScreen extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14,
-            color: kHintColor,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 14, color: kHintColor)),
       ],
     );
   }
 
-  Widget _buildProfileOption(BuildContext context, {required IconData icon, required String title, required VoidCallback onTap}) {
+  Widget _buildProfileOption(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required VoidCallback onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -337,9 +337,9 @@ class ProfileScreen extends StatelessWidget {
         onTap: () async {
           await authProvider.logout();
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Logout berhasil")),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text("Logout berhasil")));
             context.go('/login');
           }
         },

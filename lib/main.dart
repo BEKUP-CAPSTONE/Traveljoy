@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/auth_provider.dart';
+import 'package:traveljoy/providers/history_provider.dart';
 import 'package:traveljoy/providers/onboarding_provider.dart';
 import 'package:traveljoy/theme/app_theme.dart';
 import 'core/router.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => WisataProvider()),
         ChangeNotifierProvider(create: (_) => ItineraryProvider()),
+        ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),

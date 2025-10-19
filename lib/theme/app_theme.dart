@@ -14,7 +14,6 @@ class AppTheme {
       primary: secondaryColor,
       secondary: secondaryColor,
       surface: Colors.white,
-      background: Colors.white,
       brightness: Brightness.light,
     ),
 

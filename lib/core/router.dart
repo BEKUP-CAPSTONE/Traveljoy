@@ -21,14 +21,25 @@ class AppRouter {
       initialLocation: '/',
       refreshListenable: Listenable.merge([authProvider, onboardingProvider]),
       routes: [
-        GoRoute(path: '/', builder: (context, state) => const MainNavigation()),
+        GoRoute(
+          path: '/',
+          builder: (context, state) => const MainNavigation(),
+          routes: [
+            GoRoute(path: 'itinerary/input', builder: (context, state) => const ItineraryInputScreen()),
+            GoRoute(
+              path: '/itinerary/result',
+              builder: (context, state) {
+                final extra = state.extra as Map<String, dynamic>?;
+                final isFromHistory = extra?['isFromHistory'] ?? false;
+                return ItineraryResultScreen(isFromHistory: isFromHistory);
+              },
+            ),
+          ],
+        ),
         GoRoute(path: '/onboarding', builder: (context, state) => const OnboardingScreen()),
         GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
         GoRoute(path: '/register', builder: (context, state) => const RegisterScreen()),
         GoRoute(path: '/terms',builder: (context, state) => const TermsScreen()),
-        GoRoute(path: '/itinerary', builder: (context, state) => const ItineraryScreen()),
-        GoRoute(path: '/itinerary/input', builder: (context, state) => const ItineraryInputScreen()),
-        GoRoute(path: '/itinerary/result', builder: (context, state) => const ItineraryResultScreen()),
         GoRoute(path: '/daerah', builder: (context, state) => const DaerahScreen()),
         GoRoute(path: '/wisata-daerah/:id',
           builder: (context, state) {
