@@ -58,9 +58,15 @@ import '../../providers/profile_provider.dart';
 import '../../providers/favorite_provider.dart';
 import '../../providers/itinerary_provider.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+
+class _ProfileScreenState extends State<ProfileScreen> {
   String _getUserName(AuthProvider authProvider) {
     final user = authProvider.supabase.auth.currentUser;
     final metadata = user?.userMetadata;
@@ -81,6 +87,14 @@ class ProfileScreen extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    final profileProvider = context.read<ProfileProvider>();
+    profileProvider.loadProfileData();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
     final profileProvider = Provider.of<ProfileProvider>(context);
@@ -92,7 +106,11 @@ class ProfileScreen extends StatelessWidget {
     final String userEmail = authProvider.userEmail.isNotEmpty
         ? authProvider.userEmail
         : "guest@example.com";
-    final String userNameDisplay = _getUserName(authProvider);
+
+    final String userNameDisplay = profileProvider.profileName?.isNotEmpty == true
+        ? profileProvider.profileName!
+        : userEmail.split('@').first.toUpperCase();
+
     final String? avatarUrl = _getUserAvatarUrl(authProvider);
 
     return Scaffold(
@@ -159,61 +177,21 @@ class ProfileScreen extends StatelessWidget {
             const SizedBox(height: 30),
 
             _buildStatCounts(
-              // itineraryCount: itineraryProvider.history.length,
-              itineraryCount: 1,
+              itineraryCount: profileProvider.itineraryCount,
               favoriteCount: profileProvider.favoriteCount,
             ),
+
             const SizedBox(height: 30),
 
             // Daftar menu
             _buildProfileOption(
               context,
               icon: Icons.person_outline,
-              title: 'Personal Info',
+              title: 'Edit Profil',
               onTap: () {
-                debugPrint('Navigasi ke Personal Info');
+                context.push('/edit-profile');
               },
             ),
-            // _buildProfileOption(
-            //   context,
-            //   icon: Icons.travel_explore_outlined,
-            //   title: 'Travel Preferences',
-            //   onTap: () {
-            //     debugPrint('Navigasi ke Travel Preferences');
-            //   },
-            // ),
-            // _buildProfileOption(
-            //   context,
-            //   icon: Icons.history,
-            //   title: 'History (Trip)',
-            //   onTap: () {
-            //     debugPrint('Navigasi ke History Trip');
-            //   },
-            // ),
-            // _buildProfileOption(
-            //   context,
-            //   icon: Icons.lock_outline,
-            //   title: 'Account & Security',
-            //   onTap: () {
-            //     debugPrint('Navigasi ke Account & Security');
-            //   },
-            // ),
-            // _buildProfileOption(
-            //   context,
-            //   icon: Icons.payment_outlined,
-            //   title: 'Payment Methods',
-            //   onTap: () {
-            //     debugPrint('Navigasi ke Payment Methods');
-            //   },
-            // ),
-            // _buildProfileOption(
-            //   context,
-            //   icon: Icons.language,
-            //   title: 'App Language',
-            //   onTap: () {
-            //     debugPrint('Navigasi ke App Language');
-            //   },
-            // ),
             const SizedBox(height: 30),
 
             // Logout Button

@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ItineraryProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider(Supabase.instance.client),),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
 
       ],

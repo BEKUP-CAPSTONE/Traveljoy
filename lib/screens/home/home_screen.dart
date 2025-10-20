@@ -310,6 +310,8 @@ import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import 'package:flutter/services.dart';
 
+import '../../providers/profile_provider.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -461,11 +463,14 @@ class _HomeScreenState extends State<HomeScreen> {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final user = authProvider.supabase.auth.currentUser;
     final metadata = user?.userMetadata;
+    final profileProvider = Provider.of<ProfileProvider>(context);
 
-    // Ambil nama & foto profil dari metadata
-    final String displayName = (metadata?['name'] as String?)?.trim() ??
+    final String displayName = (profileProvider.profileName?.trim().isNotEmpty ?? false)
+        ? profileProvider.profileName!
+        : (metadata?['name'] as String?)?.trim() ??
         user?.email?.split('@').first.toUpperCase() ??
         'Guest User';
+
     final String? avatarUrl = metadata?['avatar_url'] as String?;
 
     return Column(
@@ -493,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Hai ${(displayName?.split(' ').first ?? "Kamu")},",
+                        "Hai ${displayName.split(' ').first},",
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w800,

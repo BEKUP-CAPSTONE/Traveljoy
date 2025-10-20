@@ -15,6 +15,7 @@ import '../screens/main_navigation.dart';
 import '../screens/home/detail_wisata_screen.dart';
 import '../screens/itinerary/itinerary_result_screen.dart';
 import '../screens/itinerary/itinerary_input_screen.dart';
+import '../screens/profile/edit_profile_screen.dart';
 
 class AppRouter {
   static GoRouter createRouter(
@@ -77,6 +78,10 @@ class AppRouter {
             final nama = state.pathParameters['nama']!;
             return WisataKategoriScreen(idKategori: id, namaKategori: nama);
           },
+        ),
+        GoRoute(
+          path: '/edit-profile',
+          builder: (context, state) => const EditProfileScreen(),
         ),
         GoRoute(
           path: '/detail-wisata/:id',
