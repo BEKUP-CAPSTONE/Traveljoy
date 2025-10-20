@@ -14,6 +14,7 @@ class AuthProvider with ChangeNotifier {
 
   bool get isLoggedIn => supabase.auth.currentUser != null;
   String get userEmail => supabase.auth.currentUser?.email ?? '';
+  String? get userId => supabase.auth.currentUser?.id;
 
   // AuthProvider() {
   //   _init();

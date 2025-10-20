@@ -310,6 +310,7 @@ import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import 'package:flutter/services.dart';
 
+import '../../providers/notification_provider.dart';
 import '../../providers/profile_provider.dart';
 
 
@@ -355,6 +356,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+
+    final userId = context.read<AuthProvider>().userId;
+    if (userId != null) {
+      context.read<NotificationProvider>().initNotifications(userId);
+    }
 
     _currentBannerPage = 0;
     _bannerPageController = PageController(
@@ -514,32 +520,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: kWhite.withOpacity(0.25),
-              ),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Icon(Icons.notifications_none, color: kWhite),
-                  const Positioned(
-                    top: 12,
-                    right: 12,
-                    child: SizedBox(
-                      width: 8,
-                      height: 8,
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: kAccentRed,
+             GestureDetector(
+               onTap: () {
+                 context.push('/notifications');
+               },
+              child: Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: kWhite.withOpacity(0.25),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Icon(Icons.notifications_none, color: kWhite),
+                    const Positioned(
+                      top: 12,
+                      right: 12,
+                      child: SizedBox(
+                        width: 8,
+                        height: 8,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: kAccentRed,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

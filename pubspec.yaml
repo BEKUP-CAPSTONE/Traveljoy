@@ -41,6 +41,9 @@ dependencies:
   webview_flutter: ^4.13.0
   google_generative_ai: ^0.4.7
   intl: ^0.20.2
+  firebase_core: ^4.2.0
+  firebase_messaging: ^16.0.3
+  flutter_local_notifications: ^19.5.0
 
 dev_dependencies:
   flutter_test:
