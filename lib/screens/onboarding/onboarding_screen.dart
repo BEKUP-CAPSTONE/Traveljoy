@@ -69,6 +69,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // PageView untuk gambar dan teks
           PageView.builder(
             controller: _controller,
             itemCount: _onboardingData.length,
@@ -78,6 +79,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
           ),
 
+          // Tombol Skip
           Positioned(
             top: MediaQuery.of(context).padding.top + 10,
             right: 20,
@@ -91,6 +93,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 16,
                 ),
               ),
+            ),
+          ),
+
+          Positioned(
+            bottom: 40,
+            left: 24,
+            right: 24,
+            child: Column(
+              children: [
+                _buildDotsIndicator(),
+                const SizedBox(height: 24),
+                _buildActionButton(),
+              ],
             ),
           ),
         ],
@@ -127,7 +142,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           left: 0,
           right: 0,
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+            padding: const EdgeInsets.fromLTRB(24, 40, 24, 146),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -157,14 +172,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 60),
-
-                // Indikator Titik
-                _buildDotsIndicator(),
-                const SizedBox(height: 24),
-
-                // Tombol Get Started / Login
-                _buildActionButton(),
               ],
             ),
           ),
@@ -203,8 +210,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         elevation: 0,
       ),
-      child: const Text(
-        "Get Started",
+      child: Text(
+        _currentIndex == _onboardingData.length - 1
+            ? "Mulai"
+            : "Lanjutkan",
         style: TextStyle(
           color: kWhite,
           fontSize: 18,
