@@ -839,11 +839,11 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 16,
-            mainAxisExtent: 230,
+            mainAxisExtent: 200,
           ),
           itemCount: filteredWisata.length,
           itemBuilder: (context, index) {
@@ -855,7 +855,7 @@ class _HomeScreenState extends State<HomeScreen> {
             final String gambarUrl =
             (gambarList != null && gambarList.isNotEmpty)
                 ? gambarList.first.toString()
-                : 'assets/images/wisataDefault.png';
+                : 'assets/images/banner1.jpg';
 
             final String displayAddress = _buildDisplayAddress(wisata);
 
@@ -917,37 +917,39 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
+
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        wisata['nama_wisata'] ?? '-',
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                          color: kPrimaryDark,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Icon(Icons.location_on, color: kTeal, size: 14),
-                          const SizedBox(width: 4),
-                          Expanded(
-                            child: Text(
-                              displayAddress,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                color: kNeutralGrey,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
+                          Text(
+                            wisata['nama_wisata'] ?? '-',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: kPrimaryDark,
                             ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              Icon(Icons.location_on, color: kTeal, size: 14),
+                              const SizedBox(width: 4),
+                              Expanded(
+                                child: Text(
+                                  displayAddress,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: kNeutralGrey,
+                                  ),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -1008,7 +1010,7 @@ class _HomeScreenState extends State<HomeScreen> {
               final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
               final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
                   ? gambarList.first.toString()
-                  : 'assets/images/wisataDefault.png';
+                  : 'assets/images/banner1.jpg';
 
               final String displayAddress = _buildDisplayAddress(wisata);
 
@@ -1037,7 +1039,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: const BorderRadius.horizontal(
                           left: Radius.circular(16),
                         ),
-                        child: _buildImage(gambarUrl, 100, 80),
+                        child: _buildImage(gambarUrl, double.infinity, 80),
                       ),
                       const SizedBox(width: 12),
                       SizedBox(
@@ -1108,7 +1110,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       errorBuilder: (context, error, stackTrace) {
         return Image.asset(
-          'assets/images/wisataDefault.png',
+          'assets/images/banner1.jpg',
           height: height,
           width: width,
           fit: BoxFit.cover,

@@ -257,26 +257,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
             itemBuilder: (context, index) {
               final notif = notifications[index];
 
-              final lightBorder = Colors.grey.shade200;
-              final lightBg = Colors.grey.shade100;
-
               final iconData = notif.isRead
                   ? Icons.chat_bubble_outline
                   : Icons.chat_bubble;
 
               return Card(
                 elevation: 0,
+                color: kWhite,
                 margin: const EdgeInsets.only(bottom: 12),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                  side: BorderSide(color: lightBorder, width: 1),
+                  borderRadius: BorderRadius.circular(16),
+                  side: BorderSide(color: kHintColor, width: 1),
                 ),
                 child: ListTile(
                   contentPadding:
                   const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   leading: CircleAvatar(
                     radius: 24,
-                    backgroundColor: lightBg,
+                    backgroundColor: kHintColor.withOpacity(0.15),
                     child: Icon(
                       iconData,
                       color: kNeutralGrey,

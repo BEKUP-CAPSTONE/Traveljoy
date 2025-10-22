@@ -176,11 +176,12 @@
 //   }
 // }
 
+
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/favorite_provider.dart';
 import 'package:traveljoy/providers/wisata_provider.dart';
-import 'package:go_router/go_router.dart';
 import '../../core/constants/app_colors.dart';
 
 class DetailWisataScreen extends StatefulWidget {
@@ -261,22 +262,31 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
 
     final String gambarUrl = (wisata!['gambar_url'] as List?)?.isNotEmpty == true
         ? (wisata!['gambar_url'] as List).first
-        : 'assets/images/wisataDefault.png';
+        : 'assets/images/banner1.jpg';
 
     final wisataData = wisata!;
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double sheetHeight = screenHeight * 0.50;
+    final double imageContainerHeight = (screenHeight - sheetHeight) + 30;
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: kWhite,
       body: Stack(
         children: [
-          Positioned.fill(
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: imageContainerHeight,
             child: Image.network(
               gambarUrl,
               fit: BoxFit.cover,
+              alignment: Alignment.center,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'assets/images/wisataDefault.png',
+                  'assets/images/banner1.jpg',
                   fit: BoxFit.cover,
+                  alignment: Alignment.center,
                 );
               },
             ),
@@ -316,7 +326,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             ),
           ),
 
-          _buildDetailSheet(context, wisataData),
+          _buildDetailSheet(context, wisataData, sheetHeight),
         ],
       ),
 
@@ -345,10 +355,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
     );
   }
 
-  Widget _buildDetailSheet(BuildContext context, Map<String, dynamic> data) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double sheetHeight = screenHeight * 0.55;
-
+  Widget _buildDetailSheet(BuildContext context, Map<String, dynamic> data, double sheetHeight) {
     final String formattedHarga = _formatRupiahManual(data['harga_tiket']);
 
     final String namaWisata = data['nama_wisata'] ?? 'Nama Wisata';
@@ -543,7 +550,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: kTeal,
-              minimumSize: const Size(double.infinity, 55),
+              minimumSize: const Size(double.infinity, 50),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
