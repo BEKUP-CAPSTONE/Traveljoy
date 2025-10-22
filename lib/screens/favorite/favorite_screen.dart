@@ -168,7 +168,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Kustom
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
               child: Text(
@@ -181,7 +180,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               ),
             ),
 
-            // Konten Daftar Favorit
             Expanded(
               child: favProvider.favorites.isEmpty
                   ? Center(
@@ -197,15 +195,12 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                   final fav = favProvider.favorites[index];
                   final wisata = fav['wisata'];
 
-                  // Menangani data gambar
                   final gambarList = (wisata['gambar_url'] as List?) ?? [];
                   final gambarUrl = gambarList.isNotEmpty
                       ? gambarList.first
                       : 'assets/images/wisataDefault.png';
 
                   final int wisataId = fav['wisata_id'] ?? 0;
-
-                  // Ambil semua field yang mungkin
                   final String lokasi = wisata['lokasi'] ?? '';
                   final String namaDaerah = wisata['nama_daerah'] ?? '';
                   final String alamatLengkap = wisata['alamat'] ?? '';
@@ -237,24 +232,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                       decoration: BoxDecoration(
                         color: kWhite,
                         borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: kNeutralGrey.withOpacity(0.5),
+                          width: 0.8,
+                        ),
                         boxShadow: [
                           BoxShadow(
-                            color: kBlack.withOpacity(0.08),
+                            color: kNeutralGrey.withOpacity(0.2),
                             blurRadius: 10,
-                            offset: const Offset(0, 4),
+                            offset: const Offset(0, 5),
                           ),
                         ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Gambar Utama
                           ClipRRect(
                             borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
                             child: _buildImage(gambarUrl, 160, double.infinity),
                           ),
 
-                          // Info & Tombol Hapus
                           Padding(
                             padding: const EdgeInsets.all(12),
                             child: Row(
@@ -264,7 +261,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      // Nama Wisata
                                       Text(
                                         wisata['nama_wisata'] ?? 'Nama Wisata',
                                         style: TextStyle(
@@ -277,7 +273,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                       ),
                                       const SizedBox(height: 4),
 
-                                      // Lokasi Hanya ditampilkan jika ada data lokasi
                                       if (hasLocation)
                                         Row(
                                           children: [
@@ -285,7 +280,7 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                             const SizedBox(width: 4),
                                             Expanded(
                                               child: Text(
-                                                displayAddress, // Menggunakan alamat gabungan
+                                                displayAddress,
                                                 style: TextStyle(
                                                   fontSize: 14,
                                                   color: kNeutralGrey,
@@ -300,7 +295,6 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
                                   ),
                                 ),
 
-                                // Tombol Hapus
                                 IconButton(
                                   icon: Icon(Icons.delete_outline, color: kAccentRed, size: 28),
                                   onPressed: () => favProvider.removeFavorite(context, fav['wisata_id']),

@@ -196,7 +196,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             // Logout Button
             _buildLogoutButton(context, authProvider),
-            const SizedBox(height: 80),
           ],
         ),
       ),
@@ -268,9 +267,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: kBlack.withOpacity(0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+              color: kBlack.withOpacity(0.1),
+              blurRadius: 5,
+              offset: const Offset(0, 2),
             ),
           ],
         ),
@@ -305,9 +304,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: kBlack.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: kBlack.withOpacity(0.1),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
           ),
         ],
       ),

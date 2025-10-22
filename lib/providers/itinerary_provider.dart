@@ -72,5 +72,8 @@ class ItineraryProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void loadFromHistory(Map<String, dynamic> historyData) {
+    _generatedData = historyData;
+    notifyListeners();
+  }
 }

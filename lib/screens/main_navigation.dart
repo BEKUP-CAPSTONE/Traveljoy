@@ -222,101 +222,101 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBody: true,
-
-      backgroundColor: Colors.transparent,
-
       body: _screens[_currentIndex],
 
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          bottom: 16,
-          left: 16,
-          right: 16,
+      bottomNavigationBar: Container(
+        height: 70,
+        decoration: BoxDecoration(
+          color: kWhite,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: kBlack.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, -5),
+            ),
+          ],
         ),
-        child: Container(
-          height: 80,
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-          decoration: BoxDecoration(
-            color: kWhite,
-            borderRadius: const BorderRadius.all(Radius.circular(25)),
-            boxShadow: [
-              BoxShadow(
-                color: kBlack.withOpacity(0.1),
-                blurRadius: 15,
-                offset: const Offset(0, 5),
-              ),
-            ],
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildNavItem(0, Icons.home),
-              _buildNavItem(1, Icons.location_on_outlined),
-              _buildNavItem(2, Icons.favorite_border_outlined),
-              _buildNavItem(3, Icons.settings_outlined),
-            ],
-          ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _buildNavItem(
+              0,
+              Icons.home_outlined,
+              Icons.home,
+              "Home",
+            ),
+            _buildNavItem(
+              1,
+              Icons.map_outlined,
+              Icons.map,
+              "Itinerary",
+            ),
+            _buildNavItem(
+              2,
+              Icons.favorite_border,
+              Icons.favorite,
+              "Favorite",
+            ),
+            _buildNavItem(
+              3,
+              Icons.person_outline,
+              Icons.person,
+              "Profile",
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Widget Item Navigasi Kustom
-  Widget _buildNavItem(int index, IconData icon) {
+  Widget _buildNavItem(
+      int index,
+      IconData icon,
+      IconData activeIcon,
+      String label,
+      ) {
     final bool isActive = index == _currentIndex;
     final Color activeColor = kTeal;
     final Color inactiveColor = kNeutralGrey;
 
-    // Ikon
-    final IconData displayIcon = (isActive && index == 0)
-        ? Icons.home
-        : (isActive && index == 1)
-        ? Icons.location_on
-        : (isActive && index == 2)
-        ? Icons.favorite
-        : (isActive && index == 3)
-        ? Icons.settings
-        : icon;
-
     return Expanded(
       child: InkWell(
-        borderRadius: BorderRadius.circular(10),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         onTap: () {
           setState(() {
             _currentIndex = index;
           });
         },
-        child: SizedBox(
-          height: double.infinity,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 10), // Padding atas
-
-              // Ikon Utama
-              Container(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Icon(
-                  displayIcon,
-                  color: isActive ? activeColor : inactiveColor,
-                  size: 28,
-                ),
+              Icon(
+                isActive ? activeIcon : icon,
+                color: isActive ? activeColor : inactiveColor,
+                size: 28,
               ),
 
-              // DOT Indikator Aktif
-              if (isActive)
-                Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
+              if (isActive) ...[
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
                     color: activeColor,
-                    shape: BoxShape.circle,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
                   ),
-                )
-              else
-                const SizedBox(height: 6), // Spacer untuk menjaga ketinggian
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ]
             ],
           ),
         ),

@@ -309,7 +309,6 @@ import 'package:traveljoy/providers/favorite_provider.dart';
 import '../../core/constants/app_colors.dart';
 import '../../providers/auth_provider.dart';
 import 'package:flutter/services.dart';
-
 import '../../providers/notification_provider.dart';
 import '../../providers/profile_provider.dart';
 
@@ -561,7 +560,6 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(height: 20),
 
         _buildAutoScrollBannerCard(context),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -1016,62 +1014,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
               return GestureDetector(
                 onTap: () => context.push('/detail-wisata/${wisata['id']}'),
-                child: SizedBox(
-                  width: 300,
-                  child: Card(
+                child: Container(
+                  margin: const EdgeInsets.only(right: 16, top: 6, bottom: 6),
+                  decoration: BoxDecoration(
                     color: kWhite,
-                    margin: const EdgeInsets.only(right: 16, top: 6, bottom: 6),
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: kNeutralGrey.withOpacity(0.5),
+                      width: 0.8,
                     ),
-                    child: Row(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.horizontal(
-                            left: Radius.circular(10),
-                          ),
-                          child: _buildImage(gambarUrl, 100, 80),
+                    boxShadow: [
+                      BoxShadow(
+                        color: kNeutralGrey.withOpacity(0.2),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.horizontal(
+                          left: Radius.circular(16),
                         ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                wisata['nama_wisata'] ?? '-',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: kPrimaryDark,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                        child: _buildImage(gambarUrl, 100, 80),
+                      ),
+                      const SizedBox(width: 12),
+                      SizedBox(
+                        width: 170,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              wisata['nama_wisata'] ?? '-',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: kPrimaryDark,
                               ),
-                              const SizedBox(height: 4),
-                              Row(
-                                children: [
-                                  Icon(Icons.location_on, color: kTeal, size: 14),
-                                  const SizedBox(width: 4),
-                                  Expanded(
-                                    child: Text(
-                                      displayAddress,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: kNeutralGrey,
-                                      ),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                Icon(Icons.location_on, color: kTeal, size: 14),
+                                const SizedBox(width: 4),
+                                Expanded(
+                                  child: Text(
+                                    displayAddress,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: kNeutralGrey,
                                     ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
                   ),
                 ),
               );
