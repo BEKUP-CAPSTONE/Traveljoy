@@ -485,6 +485,9 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             GestureDetector(
+              onTap: () {
+                context.push('/edit-profile');
+              },
               child: Row(
                 children: [
                   CircleAvatar(
@@ -492,8 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     backgroundColor: Colors.white.withOpacity(0.2),
                     backgroundImage: avatarUrl != null
                         ? NetworkImage(avatarUrl)
-                        : const AssetImage('assets/images/logo.png')
-                    as ImageProvider,
+                        : null,
                     child: avatarUrl == null
                         ? Icon(Icons.person, color: kWhite.withOpacity(0.8))
                         : null,
@@ -571,7 +573,6 @@ class _HomeScreenState extends State<HomeScreen> {
       decoration: BoxDecoration(
         color: kWhite,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: kNeutralGrey.withOpacity(0.5)),
         boxShadow: [
           BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
         ],
@@ -671,7 +672,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
                 color: isSelected ? kTeal : kWhite,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(
                   color: isSelected ? kTeal : kNeutralGrey.withOpacity(0.3),
                 ),
@@ -843,7 +844,7 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisCount: 2,
             crossAxisSpacing: 12,
             mainAxisSpacing: 16,
-            mainAxisExtent: 200,
+            mainAxisExtent: 210,
           ),
           itemCount: filteredWisata.length,
           itemBuilder: (context, index) {
@@ -858,6 +859,106 @@ class _HomeScreenState extends State<HomeScreen> {
                 : 'assets/images/banner1.jpg';
 
             final String displayAddress = _buildDisplayAddress(wisata);
+
+            // return GestureDetector(
+            //   onTap: () => context.push('/detail-wisata/$wisataId'),
+            //   child: Container(
+            //     decoration: BoxDecoration(
+            //       color: kWhite,
+            //       borderRadius: BorderRadius.circular(16),
+            //       border: Border.all(
+            //         color: kNeutralGrey.withOpacity(0.5),
+            //         width: 0.8,
+            //       ),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: kNeutralGrey.withOpacity(0.2),
+            //           blurRadius: 10,
+            //           offset: const Offset(0, 5),
+            //         ),
+            //       ],
+            //     ),
+            //     child: Column(
+            //       crossAxisAlignment: CrossAxisAlignment.start,
+            //       children: [
+            //         Stack(
+            //           children: [
+            //             ClipRRect(
+            //               borderRadius: const BorderRadius.vertical(
+            //                 top: Radius.circular(16),
+            //               ),
+            //               child: _buildImage(gambarUrl, 130, double.infinity),
+            //             ),
+            //             Positioned(
+            //               top: 10,
+            //               right: 10,
+            //               child: Container(
+            //                 padding: const EdgeInsets.all(2),
+            //                 decoration: BoxDecoration(
+            //                   color: kWhite.withOpacity(0.8),
+            //                   shape: BoxShape.circle,
+            //                 ),
+            //                 child: IconButton(
+            //                   icon: Icon(
+            //                     isFav ? Icons.favorite : Icons.favorite_outline,
+            //                     color: kAccentRed,
+            //                     size: 22,
+            //                   ),
+            //                   padding: EdgeInsets.zero,
+            //                   constraints: const BoxConstraints(),
+            //                   onPressed: () {
+            //                     if (isFav) {
+            //                       favProvider.removeFavorite(context, wisataId);
+            //                     } else {
+            //                       favProvider.addFavorite(context, wisataId);
+            //                     }
+            //                   },
+            //                 ),
+            //               ),
+            //             ),
+            //           ],
+            //         ),
+            //
+            //         Padding(
+            //           padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               Text(
+            //                 wisata['nama_wisata'] ?? '-',
+            //                 style: const TextStyle(
+            //                   fontWeight: FontWeight.bold,
+            //                   fontSize: 15,
+            //                   color: kPrimaryDark,
+            //                 ),
+            //                 maxLines: 1,
+            //                 overflow: TextOverflow.ellipsis,
+            //               ),
+            //               const SizedBox(height: 4),
+            //               Row(
+            //                 children: [
+            //                   Icon(Icons.location_on, color: kTeal, size: 14),
+            //                   const SizedBox(width: 4),
+            //                   Expanded(
+            //                     child: Text(
+            //                       displayAddress,
+            //                       style: const TextStyle(
+            //                         fontSize: 12,
+            //                         color: kNeutralGrey,
+            //                       ),
+            //                       maxLines: 1,
+            //                       overflow: TextOverflow.ellipsis,
+            //                     ),
+            //                   ),
+            //                 ],
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // );
 
             return GestureDetector(
               onTap: () => context.push('/detail-wisata/$wisataId'),
@@ -880,46 +981,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(16),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: _buildImage(gambarUrl, 130, double.infinity),
                           ),
-                          child: _buildImage(gambarUrl, 130, double.infinity),
-                        ),
-                        Positioned(
-                          top: 10,
-                          right: 10,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: kWhite.withOpacity(0.8),
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                isFav ? Icons.favorite : Icons.favorite_outline,
-                                color: kAccentRed,
-                                size: 22,
+                          Positioned(
+                            top: 10,
+                            right: 10,
+                            child: Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                color: kWhite.withOpacity(0.5),
+                                shape: BoxShape.circle,
                               ),
-                              padding: EdgeInsets.zero,
-                              constraints: const BoxConstraints(),
-                              onPressed: () {
-                                if (isFav) {
-                                  favProvider.removeFavorite(context, wisataId);
-                                } else {
-                                  favProvider.addFavorite(context, wisataId);
-                                }
-                              },
+                              child: IconButton(
+                                icon: Icon(
+                                  isFav ? Icons.favorite : Icons.favorite_outline,
+                                  color: kAccentRed,
+                                  size: 22,
+                                ),
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(),
+                                onPressed: () {
+                                  if (isFav) {
+                                    favProvider.removeFavorite(context, wisataId);
+                                  } else {
+                                    favProvider.addFavorite(context, wisataId);
+                                  }
+                                },
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
 
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                      padding: const EdgeInsets.fromLTRB(16, 8, 8, 8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -999,6 +1101,95 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         const SizedBox(height: 12),
 
+        // SizedBox(
+        //   height: 120,
+        //   child: ListView.builder(
+        //     scrollDirection: Axis.horizontal,
+        //     clipBehavior: Clip.none,
+        //     itemCount: provider.wisata.length > 3 ? 3 : provider.wisata.length,
+        //     itemBuilder: (context, index) {
+        //       final wisata = provider.wisata[index];
+        //       final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
+        //       final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
+        //           ? gambarList.first.toString()
+        //           : 'assets/images/banner1.jpg';
+        //
+        //       final String displayAddress = _buildDisplayAddress(wisata);
+        //
+        //       return GestureDetector(
+        //         onTap: () => context.push('/detail-wisata/${wisata['id']}'),
+        //         child: Container(
+        //           margin: const EdgeInsets.only(right: 16, top: 6, bottom: 6),
+        //           decoration: BoxDecoration(
+        //             color: kWhite,
+        //             borderRadius: BorderRadius.circular(16),
+        //             border: Border.all(
+        //               color: kNeutralGrey.withOpacity(0.5),
+        //               width: 0.8,
+        //             ),
+        //             boxShadow: [
+        //               BoxShadow(
+        //                 color: kNeutralGrey.withOpacity(0.2),
+        //                 blurRadius: 10,
+        //                 offset: const Offset(0, 5),
+        //               ),
+        //             ],
+        //           ),
+        //           child: Row(
+        //             children: [
+        //               ClipRRect(
+        //                 borderRadius: const BorderRadius.horizontal(
+        //                   left: Radius.circular(16),
+        //                 ),
+        //                 child: _buildImage(gambarUrl, double.infinity, 80),
+        //               ),
+        //               const SizedBox(width: 12),
+        //               SizedBox(
+        //                 width: 170,
+        //                 child: Column(
+        //                   crossAxisAlignment: CrossAxisAlignment.start,
+        //                   mainAxisAlignment: MainAxisAlignment.center,
+        //                   children: [
+        //                     Text(
+        //                       wisata['nama_wisata'] ?? '-',
+        //                       style: TextStyle(
+        //                         fontWeight: FontWeight.bold,
+        //                         fontSize: 16,
+        //                         color: kPrimaryDark,
+        //                       ),
+        //                       maxLines: 1,
+        //                       overflow: TextOverflow.ellipsis,
+        //                     ),
+        //                     const SizedBox(height: 4),
+        //                     Row(
+        //                       children: [
+        //                         Icon(Icons.location_on, color: kTeal, size: 14),
+        //                         const SizedBox(width: 4),
+        //                         Expanded(
+        //                           child: Text(
+        //                             displayAddress,
+        //                             style: TextStyle(
+        //                               fontSize: 12,
+        //                               color: kNeutralGrey,
+        //                             ),
+        //                             maxLines: 1,
+        //                             overflow: TextOverflow.ellipsis,
+        //                           ),
+        //                         ),
+        //                       ],
+        //                     ),
+        //                   ],
+        //                 ),
+        //               ),
+        //               const SizedBox(width: 12),
+        //             ],
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
+
         SizedBox(
           height: 120,
           child: ListView.builder(
@@ -1035,13 +1226,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Row(
                     children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.horizontal(
-                          left: Radius.circular(16),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12.0),
+                          child: _buildImage(gambarUrl, 100, 100),
                         ),
-                        child: _buildImage(gambarUrl, double.infinity, 80),
                       ),
-                      const SizedBox(width: 12),
                       SizedBox(
                         width: 170,
                         child: Column(
@@ -1086,7 +1277,7 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-        ),
+        )
       ],
     );
   }
