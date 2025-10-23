@@ -20,7 +20,6 @@ import 'firebase_options.dart';
 
 /// 🔔 Background message handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // await Firebase.initializeApp();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -66,7 +65,6 @@ Future<void> main() async {
     statusBarIconBrightness: Brightness.dark,
   ));
 
-  // await Firebase.initializeApp();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

@@ -65,11 +65,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
-          // PageView untuk gambar dan teks
           PageView.builder(
             controller: _controller,
             itemCount: _onboardingData.length,
@@ -79,33 +79,71 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             },
           ),
 
-          // Tombol Skip
           Positioned(
-            top: MediaQuery.of(context).padding.top + 10,
+            top: 10,
             right: 20,
-            child: TextButton(
-              onPressed: _finishOnboarding,
-              child: Text(
-                "Skip",
-                style: TextStyle(
-                  color: kWhite.withOpacity(0.9),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+            child: SafeArea(
+              bottom: false,
+              left: false,
+              right: false,
+              child: TextButton(
+                onPressed: _finishOnboarding,
+                child: Text(
+                  "Skip",
+                  style: TextStyle(
+                    color: kWhite.withOpacity(0.9),
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
               ),
             ),
           ),
 
           Positioned(
-            bottom: 40,
-            left: 24,
-            right: 24,
-            child: Column(
-              children: [
-                _buildDotsIndicator(),
-                const SizedBox(height: 24),
-                _buildActionButton(),
-              ],
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              top: false,
+              left: false,
+              right: false,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      _onboardingData[_currentIndex].title,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryDark,
+                        height: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Text(
+                        _onboardingData[_currentIndex].description,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: kHintColor,
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 32),
+                    _buildDotsIndicator(),
+                    const SizedBox(height: 24),
+                    _buildActionButton(),
+                    const SizedBox(height: 20),
+                  ],
+                ),
+              ),
             ),
           ),
         ],
@@ -118,7 +156,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       fit: StackFit.expand,
       children: [
         Image.asset(content.imagePath, fit: BoxFit.cover),
-
         Positioned.fill(
           child: Container(
             decoration: BoxDecoration(
@@ -133,46 +170,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 end: Alignment.bottomCenter,
                 stops: const [0.55, 0.75, 0.9, 1.0],
               ),
-            ),
-          ),
-        ),
-
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24, 40, 24, 146),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Judul
-                Text(
-                  content.title,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    color: kPrimaryDark,
-                    height: 1.2,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Deskripsi
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    content.description,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: kHintColor,
-                    ),
-                  ),
-                ),
-              ],
             ),
           ),
         ),

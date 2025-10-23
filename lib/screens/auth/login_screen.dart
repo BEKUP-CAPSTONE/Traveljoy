@@ -32,69 +32,55 @@ class _LoginPageState extends State<LoginScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-
-    final double verticalPadding = screenHeight * 0.04;
-
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: kWhite,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(24.0, verticalPadding, 24.0, 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // App Logo
-              _buildMainIcon(),
-              const SizedBox(height: 20),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                // App Logo
+                _buildMainIcon(),
+                const SizedBox(height: 20),
 
-              // Teks Selamat Datang
-              _buildWelcomeText(),
-              const SizedBox(height: 40),
+                _buildWelcomeText(),
+                const SizedBox(height: 40),
 
-              // Form Input (Email dan Password)
-              _buildEmailField(),
-              const SizedBox(height: 20),
-              _buildPasswordField(),
-              const SizedBox(height: 20),
+                _buildEmailField(),
+                const SizedBox(height: 20),
+                _buildPasswordField(),
+                const SizedBox(height: 20),
+                _buildTermsAndConditions(),
+                const SizedBox(height: 30),
+                _buildLoginButton(context, authProvider),
 
-              // Checkbox dan Tautan Kebijakan Privasi
-              _buildTermsAndConditions(),
-              const SizedBox(height: 30),
-
-              // Tombol Login
-              _buildLoginButton(context, authProvider),
-
-              if (authProvider.errorMessage != null && !authProvider.isLoading)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    authProvider.errorMessage!,
-                    style: TextStyle(
-                      color: kAccentRed,
-                      fontWeight: FontWeight.bold,
+                if (authProvider.errorMessage != null && !authProvider.isLoading)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      authProvider.errorMessage!,
+                      style: TextStyle(
+                        color: kAccentRed,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
-                ),
 
-              const SizedBox(height: 10),
-
-              // Teks "Or continue with"
-              _buildOrContinueWithText(),
-              const SizedBox(height: 10),
-
-              // Ikon Google Login
-              _buildGoogleSignInButton(context),
-
-              const SizedBox(height: 20),
-
-              // Tautan Sign Up
-              _buildSignUpText(context),
-            ],
+                const SizedBox(height: 10),
+                _buildOrContinueWithText(),
+                const SizedBox(height: 10),
+                _buildGoogleSignInButton(context),
+                const SizedBox(height: 20),
+                _buildSignUpText(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -357,21 +343,18 @@ class _LoginPageState extends State<LoginScreen> {
         text: TextSpan(
           text: "Anda tidak memiliki akun? ",
           style: TextStyle(color: kBlack, fontSize: 16),
-          children: <InlineSpan>[
-            WidgetSpan(
-              child: InkWell(
-                onTap: () {
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Daftar',
+              style: TextStyle(
+                color: kTeal,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
                   context.go('/register');
                 },
-                child: Text(
-                  'Daftar',
-                  style: TextStyle(
-                    color: kTeal,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
             ),
           ],
         ),

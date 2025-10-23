@@ -11,7 +11,6 @@ import 'package:traveljoy/screens/home/wisata_daerah_screen.dart';
 import 'package:traveljoy/screens/onboarding/onboarding_screen.dart';
 import '../screens/home/notification_screen.dart';
 import '../screens/home/wisata_kategori_screen.dart';
-import '../screens/itinerary/itinerary_screen.dart';
 import '../screens/main_navigation.dart';
 import '../screens/home/detail_wisata_screen.dart';
 import '../screens/itinerary/itinerary_result_screen.dart';

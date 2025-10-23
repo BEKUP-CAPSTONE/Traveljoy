@@ -44,14 +44,20 @@ class _TermsScreenState extends State<TermsScreen> {
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: Stack(
-        children: [
-          WebViewWidget(controller: _controller),
-          if (_isLoading)
-            const Center(
-              child: CircularProgressIndicator(),
-            ),
-        ],
+      body: SafeArea(
+        top: false,
+        child: Stack(
+          children: [
+            WebViewWidget(controller: _controller),
+
+            if (_isLoading)
+              const Center(
+                child: CircularProgressIndicator(
+                  color: kTeal,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

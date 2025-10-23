@@ -38,7 +38,7 @@ class AboutAppScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'TravelJoy adalah aplikasi yang membantu kamu menemukan wisata'
+              'TravelJoy adalah aplikasi yang membantu kamu menemukan wisata '
                   'dan membuat jadwal perjalanan menarik dengan mudah. '
                   'Nikmati pengalaman perjalanan yang menyenangkan dan praktis '
                   'langsung dari genggamanmu.',

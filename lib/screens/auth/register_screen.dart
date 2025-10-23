@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -28,93 +29,91 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   @override
+  @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double verticalPadding = screenHeight * 0.04;
 
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
       backgroundColor: kWhite,
       body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.fromLTRB(24.0, verticalPadding, 24.0, 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              // App Logo
-              _buildMainIcon(),
-              const SizedBox(height: 20),
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                // App Logo
+                _buildMainIcon(),
+                const SizedBox(height: 20),
 
-              // Teks (Let's Get Started)
-              _buildWelcomeText(),
-              const SizedBox(height: 40),
+                // Teks (Let's Get Started)
+                _buildWelcomeText(),
+                const SizedBox(height: 40),
 
-              // Input Email
-              _buildInputField(
-                label: 'Email',
-                hint: 'Masukkan Email Anda',
-                keyboardType: TextInputType.emailAddress,
-                controller: _emailController,
-              ),
-              const SizedBox(height: 20),
-
-              // Input Password
-              _buildPasswordField(
-                label: 'Sandi',
-                controller: _passwordController,
-                isPasswordVisible: _isPasswordVisible,
-                onToggleVisibility: (isVisible) {
-                  setState(() {
-                    _isPasswordVisible = isVisible;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // Re-type Password
-              _buildPasswordField(
-                label: 'Ulangi Sandi anda',
-                controller: _retypePasswordController,
-                isPasswordVisible: _isRetypePasswordVisible,
-                onToggleVisibility: (isVisible) {
-                  setState(() {
-                    _isRetypePasswordVisible = isVisible;
-                  });
-                },
-              ),
-              const SizedBox(height: 40),
-
-              _buildRegisterButton(context, authProvider),
-
-              // Error message
-              if (authProvider.errorMessage != null && !authProvider.isLoading)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10),
-                  child: Text(
-                    authProvider.errorMessage!,
-                    style: TextStyle(
-                      color: kAccentRed,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                // Input Email
+                _buildInputField(
+                  label: 'Email',
+                  hint: 'Masukkan Email Anda',
+                  keyboardType: TextInputType.emailAddress,
+                  controller: _emailController,
                 ),
+                const SizedBox(height: 20),
 
-              const SizedBox(height: 10),
+                // Input Password
+                _buildPasswordField(
+                  label: 'Sandi',
+                  controller: _passwordController,
+                  isPasswordVisible: _isPasswordVisible,
+                  onToggleVisibility: (isVisible) {
+                    setState(() {
+                      _isPasswordVisible = isVisible;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
 
-              // Teks "Or continue with"
-              _buildOrContinueWithText(),
-              const SizedBox(height: 10),
+                // Re-type Password
+                _buildPasswordField(
+                  label: 'Ulangi Sandi anda',
+                  controller: _retypePasswordController,
+                  isPasswordVisible: _isRetypePasswordVisible,
+                  onToggleVisibility: (isVisible) {
+                    setState(() {
+                      _isRetypePasswordVisible = isVisible;
+                    });
+                  },
+                ),
+                const SizedBox(height: 40),
 
-              // Tombol Google Sign Up
-              _buildGoogleSignInButton(context),
+                _buildRegisterButton(context, authProvider),
 
-              const SizedBox(height: 20),
+                // Error message
+                if (authProvider.errorMessage != null && !authProvider.isLoading)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Text(
+                      authProvider.errorMessage!,
+                      style: TextStyle(
+                        color: kAccentRed,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
 
-              // Tautan Sign In
-              _buildSignUpText(context),
-            ],
+                const SizedBox(height: 10),
+
+                _buildOrContinueWithText(),
+                const SizedBox(height: 10),
+
+                _buildGoogleSignInButton(context),
+
+                const SizedBox(height: 20),
+
+                _buildSignUpText(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -307,7 +306,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         final success = await auth.signInWithGoogle();
 
         if (success) {
-          context.go('/login'); // langsung ke home
+          context.go('/login');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(auth.errorMessage ?? 'Login Google gagal')),
@@ -345,21 +344,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
         text: TextSpan(
           text: "Sudah memiliki akun? ",
           style: TextStyle(color: kBlack, fontSize: 16),
-          children: <InlineSpan>[
-            WidgetSpan(
-              child: InkWell(
-                onTap: () {
+          children: <TextSpan>[
+            TextSpan(
+              text: 'Masuk',
+              style: TextStyle(
+                color: kTeal,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
                   context.go('/login');
                 },
-                child: Text(
-                  'Masuk',
-                  style: TextStyle(
-                    color: kTeal,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
             ),
           ],
         ),
