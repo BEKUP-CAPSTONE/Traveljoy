@@ -992,30 +992,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           Positioned(
                             top: 10,
                             right: 10,
-                            child: Container(
-                              padding: const EdgeInsets.all(2),
-                              decoration: BoxDecoration(
-                                color: kWhite.withOpacity(0.5),
-                                shape: BoxShape.circle,
-                              ),
-                              child: IconButton(
-                                icon: Icon(
+                            child: GestureDetector(
+                              onTap: () {
+                                if (isFav) {
+                                  favProvider.removeFavorite(context, wisataId);
+                                } else {
+                                  favProvider.addFavorite(context, wisataId);
+                                }
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(6.0),
+                                decoration: BoxDecoration(
+                                  color: kWhite.withOpacity(0.8),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
                                   isFav ? Icons.favorite : Icons.favorite_outline,
                                   color: kAccentRed,
                                   size: 22,
                                 ),
-                                padding: EdgeInsets.zero,
-                                constraints: const BoxConstraints(),
-                                onPressed: () {
-                                  if (isFav) {
-                                    favProvider.removeFavorite(context, wisataId);
-                                  } else {
-                                    favProvider.addFavorite(context, wisataId);
-                                  }
-                                },
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
@@ -1321,9 +1319,8 @@ class _HomeScreenState extends State<HomeScreen> {
         child: wisataProvider.isLoading
             ? Center(child: CircularProgressIndicator(color: kTeal))
             : ListView(
-          padding: EdgeInsets.zero, // hilangkan padding bawaan
+          padding: EdgeInsets.zero,
           children: [
-            // 🔹 Bagian atas: header + search + banner
             AnimatedSwitcher(
               duration: const Duration(seconds: 2),
               child: Container(
