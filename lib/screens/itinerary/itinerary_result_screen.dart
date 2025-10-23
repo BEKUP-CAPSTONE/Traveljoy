@@ -206,7 +206,10 @@ class ItineraryResultScreen extends StatelessWidget {
                           ),
                         ),
                       );
-                      if (success) context.go('/itinerary');
+                      if (success) {
+                        context.pop();
+                        context.pop();
+                      }
                     }
                   },
                   icon: const Icon(Icons.save),

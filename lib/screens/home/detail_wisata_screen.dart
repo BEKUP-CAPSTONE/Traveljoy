@@ -329,7 +329,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
               shadowColor: kTeal.withOpacity(0.5),
             ),
             child: Text(
-              isFav ? 'Remove From Favorite' : 'Add To Favorite',
+              isFav ? 'Hapus Dari Favorit' : 'Tambahkan Ke Favorit',
               style: TextStyle(
                 color: kWhite,
                 fontSize: 16,

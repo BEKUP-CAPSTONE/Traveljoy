@@ -41,8 +41,8 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
   Widget _buildDefaultImage() {
     return Image.asset(
       _defaultImgAsset,
-      width: 60,
-      height: 60,
+      width: 70,
+      height: 70,
       fit: BoxFit.cover,
     );
   }
@@ -53,6 +53,7 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
       backgroundColor: kWhite,
       appBar: AppBar(
         elevation: 0,
+        scrolledUnderElevation: 0,
         backgroundColor: kWhite,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
@@ -137,8 +138,8 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
                         child: hasUrl
                             ? Image.network(
                           gambarUrl!,
-                          width: 60,
-                          height: 60,
+                          width: 70,
+                          height: 70,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) =>
                               _buildDefaultImage(),

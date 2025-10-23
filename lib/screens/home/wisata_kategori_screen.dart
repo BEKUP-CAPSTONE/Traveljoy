@@ -47,8 +47,8 @@ class _WisataKategoriScreenState extends State<WisataKategoriScreen> {
   Widget _buildDefaultImage() {
     return Image.asset(
       _defaultImgAsset,
-      width: 60,
-      height: 60,
+      width: 70,
+      height: 70,
       fit: BoxFit.cover,
     );
   }
@@ -59,6 +59,7 @@ class _WisataKategoriScreenState extends State<WisataKategoriScreen> {
       backgroundColor: kWhite,
       appBar: AppBar(
         elevation: 0,
+        scrolledUnderElevation: 0,
         backgroundColor: kWhite,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
@@ -143,8 +144,8 @@ class _WisataKategoriScreenState extends State<WisataKategoriScreen> {
                         child: hasUrl
                             ? Image.network(
                           gambarUrl!,
-                          width: 60,
-                          height: 60,
+                          width: 70,
+                          height: 70,
                           fit: BoxFit.cover,
                           errorBuilder: (_, __, ___) =>
                               _buildDefaultImage(),

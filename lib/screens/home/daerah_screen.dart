@@ -41,6 +41,7 @@ class _DaerahScreenState extends State<DaerahScreen> {
       backgroundColor: kWhite,
       appBar: AppBar(
         elevation: 0,
+        scrolledUnderElevation: 0,
         backgroundColor: kWhite,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: IconButton(
