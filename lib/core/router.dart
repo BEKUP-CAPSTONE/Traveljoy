@@ -17,100 +17,136 @@ import '../screens/home/detail_wisata_screen.dart';
 import '../screens/itinerary/itinerary_result_screen.dart';
 import '../screens/itinerary/itinerary_input_screen.dart';
 import '../screens/profile/edit_profile_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../screens/profile/tentang_app.dart';
 
 class AppRouter {
   static GoRouter createRouter(
-    AuthProvider authProvider,
-    OnboardingProvider onboardingProvider,
-  ) {
+      AuthProvider authProvider,
+      OnboardingProvider onboardingProvider,
+      ) {
     return GoRouter(
       initialLocation: '/',
       refreshListenable: Listenable.merge([authProvider, onboardingProvider]),
       routes: [
         GoRoute(
           path: '/',
-          builder: (context, state) => const MainNavigation(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const MainNavigation()),
           routes: [
             GoRoute(
               path: 'itinerary/input',
-              builder: (context, state) => const ItineraryInputScreen(),
+              pageBuilder: (context, state) =>
+                  _buildSlideTransitionPage(state, const ItineraryInputScreen()),
             ),
             GoRoute(
               path: '/itinerary/result',
-              builder: (context, state) {
+              pageBuilder: (context, state) {
                 final extra = state.extra as Map<String, dynamic>?;
                 final isFromHistory = extra?['isFromHistory'] ?? false;
-                return ItineraryResultScreen(isFromHistory: isFromHistory);
+                return _buildSlideTransitionPage(
+                  state,
+                  ItineraryResultScreen(isFromHistory: isFromHistory),
+                );
               },
             ),
           ],
         ),
         GoRoute(
           path: '/onboarding',
-          builder: (context, state) => const OnboardingScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const OnboardingScreen()),
         ),
         GoRoute(
           path: '/login',
-          builder: (context, state) => const LoginScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const LoginScreen()),
         ),
         GoRoute(
           path: '/register',
-          builder: (context, state) => const RegisterScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const RegisterScreen()),
         ),
         GoRoute(
           path: '/terms',
-          builder: (context, state) => const TermsScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const TermsScreen()),
+        ),
+        GoRoute(
+          path: '/tentang-app',
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const AboutAppScreen()),
+        ),
+        GoRoute(
+          path: '/profile',
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const ProfileScreen()),
         ),
         GoRoute(
           path: '/daerah',
-          builder: (context, state) => const DaerahScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const DaerahScreen()),
         ),
         GoRoute(
           path: '/wisata-daerah/:id',
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
-            return WisataDaerahScreen(idDaerah: id);
+            return _buildSlideTransitionPage(
+                state, WisataDaerahScreen(idDaerah: id));
           },
         ),
         GoRoute(
           path: '/wisata-kategori/:id/:nama',
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
             final nama = state.pathParameters['nama']!;
-            return WisataKategoriScreen(idKategori: id, namaKategori: nama);
+            return _buildSlideTransitionPage(
+              state,
+              WisataKategoriScreen(idKategori: id, namaKategori: nama),
+            );
           },
         ),
         GoRoute(
           path: '/edit-profile',
-          builder: (context, state) => const EditProfileScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const EditProfileScreen()),
         ),
         GoRoute(
           path: '/detail-wisata/:id',
-          builder: (context, state) {
+          pageBuilder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
-            return DetailWisataScreen(id: id);
+            return _buildSlideTransitionPage(
+              state,
+              DetailWisataScreen(id: id),
+            );
           },
         ),
         GoRoute(
           path: '/favorites',
-          builder: (context, state) => const FavoriteScreen(),
-        ),GoRoute(
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const FavoriteScreen()),
+        ),
+        GoRoute(
           path: '/notifications',
-          builder: (context, state) => const NotificationScreen(),
+          pageBuilder: (context, state) =>
+              _buildSlideTransitionPage(state, const NotificationScreen()),
         ),
       ],
       redirect: (context, state) {
         final loggedIn = authProvider.isLoggedIn;
         final hasSeenOnboarding = onboardingProvider.hasSeenOnboarding;
-        final loggingIn =
-            state.matchedLocation == '/login' ||
+        final loggingIn = state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
         final onboarding = state.matchedLocation == '/onboarding';
+        final publicRoutes = ['/terms'];
 
         if (!hasSeenOnboarding && !onboarding) {
           return '/onboarding';
         }
-        if (!loggedIn && !loggingIn && hasSeenOnboarding) {
+        if (!loggedIn &&
+            !loggingIn &&
+            hasSeenOnboarding &&
+            !publicRoutes.contains(state.matchedLocation)) {
           return '/login';
         }
         if (loggedIn && loggingIn) {
@@ -120,19 +156,25 @@ class AppRouter {
       },
     );
   }
-}
 
-// GoRoute(
-//   path: '/detail-wisata',
-//   builder: (context, state) => const DetailWisataScreen(),
-// ),
-//
-// GoRoute(
-//   path: '/itinerary-result',
-//   builder: (context, state) => const ItineraryResultScreen(),
-// ),
-//
-// GoRoute(
-//   path: '/itinerary-history',
-//   builder: (context, state) => const ItineraryHistoryScreen(),
-// ),
+  static CustomTransitionPage _buildSlideTransitionPage(
+      GoRouterState state, Widget child) {
+    return CustomTransitionPage(
+      key: state.pageKey,
+      child: child,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        const begin = Offset(1.0, 0.0);
+        const end = Offset.zero;
+        const curve = Curves.easeInOut;
+
+        final tween =
+        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        final offsetAnimation = animation.drive(tween);
+
+        return SlideTransition(position: offsetAnimation, child: child);
+      },
+      transitionDuration: const Duration(milliseconds: 250),
+    );
+  }
+
+}

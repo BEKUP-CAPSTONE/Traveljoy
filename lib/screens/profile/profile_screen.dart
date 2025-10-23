@@ -101,7 +101,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final favoriteProvider = Provider.of<FavoriteProvider>(context);
     final itineraryProvider = Provider.of<ItineraryProvider>(context);
 
-    profileProvider.setFavoriteCount(favoriteProvider.favorites.length);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      profileProvider.setFavoriteCount(favoriteProvider.favorites.length);
+    });
 
     final String userEmail = authProvider.userEmail.isNotEmpty
         ? authProvider.userEmail
@@ -116,7 +118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         toolbarHeight: 0,
       ),
@@ -192,7 +194,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 context.push('/edit-profile');
               },
             ),
-            const SizedBox(height: 30),
+            _buildProfileOption(
+              context,
+              icon: Icons.edit_note,
+              title: 'Syarat Ketentuan',
+              onTap: () {
+                context.push('/terms');
+              },
+            ),
+            _buildProfileOption(
+              context,
+              icon: Icons.info_outline,
+              title: 'Tentang App',
+              onTap: () {
+                context.push('/tentang-app');
+              },
+            ),
 
             // Logout Button
             _buildLogoutButton(context, authProvider),
@@ -312,12 +329,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: GestureDetector(
         onTap: () async {
-          await authProvider.logout();
-          if (context.mounted) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(const SnackBar(content: Text("Logout berhasil")));
-            context.go('/login');
+          final confirm = await showDialog<bool>(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text('Konfirmasi Logout'),
+                backgroundColor: Colors.white,
+                content: const Text('Apakah kamu yakin ingin keluar dari akun ini?'),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context, false),
+                    child: const Text('Batal'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => Navigator.pop(context, true),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kAccentRed,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const Text('Logout'),
+                  ),
+                ],
+              );
+            },
+          );
+
+          if (confirm == true) {
+            await authProvider.logout();
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text("Logout berhasil")));
+              context.go('/login');
+            }
           }
         },
         child: Row(
@@ -340,4 +384,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
 }

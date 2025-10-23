@@ -238,7 +238,6 @@ class AuthProvider with ChangeNotifier {
       _setLoading(false);
     }
   }
-
 }
 
 /// ---------------- Google Sign In ----------------

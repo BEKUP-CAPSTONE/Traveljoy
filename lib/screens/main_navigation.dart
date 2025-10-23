@@ -196,6 +196,8 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import '../core/utils/helper.dart';
 import 'home/home_screen.dart';
 import 'itinerary/itinerary_screen.dart';
 import 'favorite/favorite_screen.dart';
@@ -206,10 +208,10 @@ class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
 
   @override
-  State<MainNavigation> createState() => _MainNavigationState();
+  State<MainNavigation> createState() => MainNavigationState();
 }
 
-class _MainNavigationState extends State<MainNavigation> {
+class MainNavigationState extends State<MainNavigation> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = const [
@@ -218,6 +220,12 @@ class _MainNavigationState extends State<MainNavigation> {
     FavoriteScreen(),
     ProfileScreen(),
   ];
+
+  void navigateToProfile() {
+    setState(() {
+      _currentIndex = 3;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

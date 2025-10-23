@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:traveljoy/core/constants/app_colors.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class TermsScreen extends StatefulWidget {
@@ -35,7 +36,9 @@ class _TermsScreenState extends State<TermsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Perjanjian Pengguna'),
+        backgroundColor: kTeal,
+        foregroundColor: Colors.white,
+        title: const Text('Syarat dan Ketentuan'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),

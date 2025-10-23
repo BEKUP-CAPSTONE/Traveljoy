@@ -79,7 +79,7 @@
 //                             },
 //                           ),
 //                         );
-//                       },
+//                       },ub
 //                     ),
 //             ),
 //           ],
@@ -96,6 +96,7 @@ import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/history_provider.dart';
 import 'package:traveljoy/providers/itinerary_provider.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/utils/helper.dart';
 
 class ItineraryScreen extends StatefulWidget {
   const ItineraryScreen({super.key});
@@ -146,7 +147,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
         ),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         foregroundColor: kPrimaryDark,
       ),
       body: Padding(

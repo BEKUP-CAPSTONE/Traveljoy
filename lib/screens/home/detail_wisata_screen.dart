@@ -262,7 +262,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
 
     final String gambarUrl = (wisata!['gambar_url'] as List?)?.isNotEmpty == true
         ? (wisata!['gambar_url'] as List).first
-        : 'assets/images/banner1.jpg';
+        : 'assets/images/wisataDefault.png';
 
     final wisataData = wisata!;
     final double screenHeight = MediaQuery.of(context).size.height;
@@ -284,7 +284,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
               alignment: Alignment.center,
               errorBuilder: (context, error, stackTrace) {
                 return Image.asset(
-                  'assets/images/banner1.jpg',
+                  'assets/images/wisataDefault.png',
                   fit: BoxFit.cover,
                   alignment: Alignment.center,
                 );

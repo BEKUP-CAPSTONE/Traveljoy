@@ -61,7 +61,7 @@ class WisataProvider extends ChangeNotifier {
 
       final response = await supabase
           .from('wisata')
-          .select('id, nama_wisata, deskripsi_wisata, gambar_url')
+          .select('id, nama_wisata, deskripsi_wisata, gambar_url, daerah(nama_daerah)')
           .limit(6);
 
       _wisata = List<Map<String, dynamic>>.from(response);
@@ -90,6 +90,22 @@ class WisataProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> searchSuggestions(String keyword) async {
+    if (keyword.isEmpty) return [];
+    try {
+      final response = await supabase
+          .from('wisata')
+          .select('id, nama_wisata')
+          .ilike('nama_wisata', '%$keyword%')
+          .limit(5);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      debugPrint('❌ [WisataProvider] Gagal ambil suggestions: $e');
+      return [];
     }
   }
 
