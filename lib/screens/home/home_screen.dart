@@ -339,11 +339,6 @@ class _HomeScreenState extends State<HomeScreen> {
   late int _currentBannerPage;
   late final PageController _bannerPageController;
   Timer? _bannerTimer;
-  final List<String> _backgroundImages = [
-    'assets/images/onboarding1.jpeg',
-    'assets/images/onboarding2.jpeg',
-    'assets/images/onboarding3.jpeg',
-  ];
 
   final List<String> _bannerImages = [
     'assets/images/banner1.jpg',
@@ -380,7 +375,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _startAutoScroll() {
-    // Timer untuk auto-scroll banner
     _bannerTimer = Timer.periodic(const Duration(seconds: 5), (timer) {
       if (_bannerImages.isNotEmpty && _bannerPageController.hasClients) {
         int nextPage = _currentBannerPage + 1;
@@ -393,21 +387,6 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       }
     });
-
-    // Timer untuk background fade (jika ingin tetap ada efek background)
-    Timer.periodic(const Duration(seconds: 10), (timer) async {
-      setState(() => _isBackgroundFading = true);
-
-      await Future.delayed(const Duration(milliseconds: 400)); // waktu transisi
-      setState(() {
-        _currentBackgroundIndex =
-            (_currentBackgroundIndex + 1) % _backgroundImages.length;
-      });
-
-      await Future.delayed(const Duration(milliseconds: 400));
-      setState(() => _isBackgroundFading = false);
-    });
-
   }
 
   @override
@@ -1321,44 +1300,40 @@ class _HomeScreenState extends State<HomeScreen> {
             : ListView(
           padding: EdgeInsets.zero,
           children: [
-            AnimatedSwitcher(
-              duration: const Duration(seconds: 2),
+            Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage(
+                    'assets/images/onboarding1.jpeg',
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
               child: Container(
-                key: ValueKey<int>(_currentBackgroundIndex),
                 decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(
-                      _backgroundImages[_currentBackgroundIndex],
-                    ),
-                    fit: BoxFit.cover,
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [
+                      Colors.white,
+                      Colors.white.withOpacity(0.0),
+                      Colors.black.withOpacity(0.4),
+                    ],
+                    stops: const [
+                      0.0,
+                      0.5,
+                      1.0,
+                    ],
                   ),
                 ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: [
-                        Colors.white, // bawah putih
-                        Colors.white.withOpacity(0.0),
-                        Colors.black.withOpacity(0.4), // atas agak gelap
-                      ],
-                      stops: const [
-                        0.0,
-                        0.5,
-                        1.0,
-                      ], // transisi di tengah banner
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 20),
-                        _buildHeader(context),
-                      ],
-                    ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 20),
+                      _buildHeader(context),
+                    ],
                   ),
                 ),
               ),
