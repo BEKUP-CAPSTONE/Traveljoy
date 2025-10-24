@@ -69,7 +69,8 @@ class _WisataKategoriScreenState extends State<WisataKategoriScreen> {
         title: Text(
           'Wisata ${widget.namaKategori}',
           style: TextStyle(
-            color: kPrimaryDark,
+            color: kBlack,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

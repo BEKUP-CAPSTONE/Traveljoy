@@ -49,7 +49,9 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
         title: const Text(
           'Itinerary',
           style: TextStyle(
-            fontWeight: FontWeight.w600,
+            color: kBlack,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
           ),
         ),
         centerTitle: true,

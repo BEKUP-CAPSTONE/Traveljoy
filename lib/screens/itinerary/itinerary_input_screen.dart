@@ -61,7 +61,7 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
         title: const Text(
           'Buat Itinerary',
           style: TextStyle(
-            color: kPrimaryDark,
+            color: kBlack,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),

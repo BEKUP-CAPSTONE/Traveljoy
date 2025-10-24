@@ -77,7 +77,7 @@ class ItineraryResultScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
-        title: Text(judul, style: const TextStyle(color: kPrimaryDark, fontSize: 18, fontWeight: FontWeight.bold,)),
+        title: Text(judul, style: const TextStyle(color: kBlack, fontSize: 18, fontWeight: FontWeight.bold,)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: kPrimaryDark),
           onPressed: () => context.pop(),

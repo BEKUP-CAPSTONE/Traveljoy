@@ -63,7 +63,8 @@ class _WisataDaerahScreenState extends State<WisataDaerahScreen> {
         title: Text(
           'Wisata di Daerah Ini',
           style: TextStyle(
-            color: kPrimaryDark,
+            color: kBlack,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

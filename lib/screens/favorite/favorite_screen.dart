@@ -57,9 +57,9 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
               child: Text(
                 'Wisata Favorit',
                 style: TextStyle(
-                  fontSize: 24,
+                  color: kBlack,
+                  fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: kPrimaryDark,
                 ),
               ),
             ),

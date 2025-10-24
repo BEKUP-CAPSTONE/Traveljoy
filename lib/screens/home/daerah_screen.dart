@@ -51,7 +51,8 @@ class _DaerahScreenState extends State<DaerahScreen> {
         title: Text(
           'Pilih Daerah',
           style: TextStyle(
-            color: kPrimaryDark,
+            color: kBlack,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),

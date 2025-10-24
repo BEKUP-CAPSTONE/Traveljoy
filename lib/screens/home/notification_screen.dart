@@ -1,248 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../core/constants/app_colors.dart';
 import '../../models/announcement_model.dart';
 import '../../providers/announcements_provider.dart';
-import '../../providers/auth_provider.dart';
-import '../../providers/notification_provider.dart';
-import '../../models/notification_model.dart';
-
-// class NotificationScreen extends StatefulWidget {
-//   const NotificationScreen({super.key});
-//
-//   @override
-//   State<NotificationScreen> createState() => _NotificationScreenState();
-// }
-//
-// class _NotificationScreenState extends State<NotificationScreen> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     _loadNotifications();
-//   }
-//
-//   Future<void> _loadNotifications() async {
-//     final user = context.read<AuthProvider>().supabase.auth.currentUser;
-//     if (user != null) {
-//       await context.read<NotificationProvider>().fetchNotifications(user.id);
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final notifProvider = context.watch<NotificationProvider>();
-//     final notifications = notifProvider.notifications;
-//
-//     return Scaffold(
-//       backgroundColor: kWhite,
-//       appBar: AppBar(
-//         title: const Text('Notification'),
-//         leading: IconButton(
-//           icon: const Icon(Icons.arrow_back),
-//           onPressed: () => Navigator.pop(context),
-//         ),
-//         backgroundColor: kWhite,
-//         elevation: 0,
-//         iconTheme: const IconThemeData(color: kPrimaryDark),
-//         titleTextStyle: Theme.of(context).textTheme.titleLarge?.copyWith(
-//           color: kPrimaryDark,
-//           fontWeight: FontWeight.bold,
-//         ),
-//       ),
-//       body: RefreshIndicator(
-//         onRefresh: _loadNotifications,
-//         child: notifications.isEmpty
-//             ? _buildEmptyState()
-//             : _buildNotificationList(notifications),
-//       ),
-//     );
-//   }
-//
-//   Widget _buildEmptyState() {
-//     final lightBg = Colors.grey.shade100;
-//
-//     return ListView(
-//       physics: const AlwaysScrollableScrollPhysics(),
-//       children: [
-//         Container(
-//           height: MediaQuery.of(context).size.height -
-//               kToolbarHeight -
-//               MediaQuery.of(context).padding.top,
-//           padding: const EdgeInsets.symmetric(horizontal: 40),
-//           child: Column(
-//             mainAxisAlignment: MainAxisAlignment.center,
-//             crossAxisAlignment: CrossAxisAlignment.center,
-//             children: [
-//               CircleAvatar(
-//                 radius: 32,
-//                 backgroundColor: lightBg,
-//                 child: const Icon(
-//                   Icons.notifications_none_outlined,
-//                   size: 32,
-//                   color: kPrimaryDark,
-//                 ),
-//               ),
-//               const SizedBox(height: 24),
-//               const Text(
-//                 "Ups! Belum ada notifikasi",
-//                 style: TextStyle(
-//                   fontSize: 22,
-//                   fontWeight: FontWeight.bold,
-//                   color: kPrimaryDark,
-//                 ),
-//               ),
-//               const SizedBox(height: 8),
-//               Text(
-//                 "Sepertinya status anda kosong. Kami akan memberi tahu Anda saat pembaruan tiba!", // Teks dari desain
-//                 textAlign: TextAlign.center,
-//                 style: TextStyle(
-//                   color: kHintColor,
-//                   fontSize: 15,
-//                   height: 1.4,
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   Widget _buildNotificationList(List<NotificationModel> notifications) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-//           child: RichText(
-//             text: TextSpan(
-//               style: const TextStyle(fontSize: 15, color: kNeutralGrey),
-//               children: [
-//                 const TextSpan(text: 'You have '),
-//                 TextSpan(
-//                   text: '${notifications.length} Notifications',
-//                   style: const TextStyle(
-//                     fontWeight: FontWeight.bold,
-//                     color: kTeal,
-//                   ),
-//                 ),
-//                 const TextSpan(text: ' today'),
-//               ],
-//             ),
-//           ),
-//         ),
-//         Expanded(
-//           child: ListView.builder(
-//             padding: const EdgeInsets.symmetric(horizontal: 20),
-//             itemCount: notifications.length,
-//             itemBuilder: (context, index) {
-//               final notif = notifications[index];
-//
-//               final iconData = notif.isRead
-//                   ? Icons.chat_bubble_outline
-//                   : Icons.chat_bubble;
-//
-//               return Card(
-//                 elevation: 0,
-//                 color: kWhite,
-//                 margin: const EdgeInsets.only(bottom: 12),
-//                 shape: RoundedRectangleBorder(
-//                   borderRadius: BorderRadius.circular(16),
-//                   side: BorderSide(color: kHintColor, width: 1),
-//                 ),
-//                 child: ListTile(
-//                   contentPadding:
-//                   const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-//                   leading: CircleAvatar(
-//                     radius: 24,
-//                     backgroundColor: kHintColor.withOpacity(0.15),
-//                     child: Icon(
-//                       iconData,
-//                       color: kNeutralGrey,
-//                       size: 24,
-//                     ),
-//                   ),
-//                   title: Text(
-//                     notif.title,
-//                     style: const TextStyle(
-//                       fontWeight: FontWeight.bold,
-//                       color: kPrimaryDark,
-//                       fontSize: 16,
-//                     ),
-//                   ),
-//                   subtitle: Text(
-//                     notif.body ?? '',
-//                     maxLines: 1,
-//                     overflow: TextOverflow.ellipsis,
-//                     style: const TextStyle(color: kHintColor, fontSize: 14),
-//                   ),
-//                   trailing: Text(
-//                     _timeAgo(notif.createdAt),
-//                     style: const TextStyle(fontSize: 12, color: kHintColor),
-//                   ),
-//                   onTap: () => _showNotificationDetail(context, notif),
-//                 ),
-//               );
-//             },
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-//
-//   void _showNotificationDetail(BuildContext context, NotificationModel notif) {
-//     context.read<NotificationProvider>().markAsRead(notif.id);
-//     showModalBottomSheet(
-//       context: context,
-//       shape: const RoundedRectangleBorder(
-//         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-//       ),
-//       backgroundColor: kWhite,
-//       builder: (_) => Padding(
-//         padding: const EdgeInsets.all(20),
-//         child: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-//             Text(
-//               notif.title,
-//               style: const TextStyle(
-//                 fontSize: 18,
-//                 fontWeight: FontWeight.bold,
-//                 color: kPrimaryDark,
-//               ),
-//             ),
-//             const SizedBox(height: 8),
-//             Text(
-//               notif.body ?? 'Tidak ada isi pesan',
-//               style: const TextStyle(
-//                 fontSize: 16,
-//                 color: kPrimaryDark,
-//               ),
-//             ),
-//             const SizedBox(height: 12),
-//             Text(
-//               'Dikirim pada: ${notif.createdAt}',
-//               style: const TextStyle(
-//                 fontSize: 13,
-//                 color: kHintColor,
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-//
-//   String _timeAgo(DateTime date) {
-//     final diff = DateTime.now().difference(date);
-//     if (diff.inMinutes < 1) return 'Baru saja';
-//     if (diff.inMinutes < 60) return '${diff.inMinutes} menit lalu';
-//     if (diff.inHours < 24) return '${diff.inHours} jam lalu';
-//     if (diff.inDays < 7) return '${diff.inDays} hari lalu';
-//     return '${date.day}/${date.month}/${date.year}';
-//   }
-// }
+import '../../core/constants/app_colors.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -255,7 +15,54 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   void initState() {
     super.initState();
-    context.read<AnnouncementProvider>().fetchAnnouncements();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<AnnouncementProvider>().fetchAnnouncements();
+    });
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: kNeutralGrey.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.notifications_none_rounded,
+                color: kPrimaryDark.withOpacity(0.6),
+                size: 48,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              "Ups! Belum ada notifikasi",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: kBlack,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "Sepertinya status anda kosong. Kami akan memberi tahu Anda saat pembaruan tiba!",
+              style: TextStyle(
+                fontSize: 15,
+                color: kHintColor,
+                height: 1.4,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -266,69 +73,85 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Announcements'),
+        title: const Text('Pengumuman',
+          style: TextStyle(
+            color: kBlack,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
+        scrolledUnderElevation: 0,
       ),
-      body: RefreshIndicator(
-        onRefresh: provider.fetchAnnouncements,
-        child: announcements.isEmpty
-            ? const Center(child: Text('Belum ada pengumuman'))
-            : ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: announcements.length,
-          itemBuilder: (context, index) {
-            final item = announcements[index];
-            final isRead = provider.isRead(item.id);
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: provider.fetchAnnouncements,
+          color: kTeal,
+          child: announcements.isEmpty
+              ? _buildEmptyState()
+              : ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: announcements.length,
+            itemBuilder: (context, index) {
+              final item = announcements[index];
+              final isRead = provider.isRead(item.id);
 
-            return GestureDetector(
-              onTap: () {
-                provider.markAsRead(item.id);
-                _showDetail(item);
-              },
-              child: Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: isRead ? Colors.white : Colors.grey.shade100,
+              return Card(
+                elevation: 3,
+                shadowColor: kNeutralGrey.withOpacity(0.2),
+                color: isRead ? kWhite : Colors.grey.shade200,
+                clipBehavior: Clip.antiAlias,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: Colors.grey.shade300),
+                  side: BorderSide(
+                    color: kNeutralGrey.withOpacity(0.5),
+                    width: 0.8,
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                margin: const EdgeInsets.only(bottom: 12),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+                  onTap: () {
+                    provider.markAsRead(item.id);
+                    _showDetail(item);
+                  },
+
+                  title: Text(
+                    item.title,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isRead ? Colors.black87 : kPrimaryDark,
+                    ),
+                  ),
+                  subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 4),
+                      Text(
+                        item.body ?? '',
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: isRead ? Colors.black54 : Colors.black87,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      item.body ?? '',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
+                      const SizedBox(height: 8),
+                      Text(
+                        _timeAgo(item.createdAt),
+                        style: const TextStyle(fontSize: 12, color: Colors.grey),
                       ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      _timeAgo(item.createdAt),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );
@@ -337,27 +160,80 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void _showDetail(AnnouncementModel item) {
     showModalBottomSheet(
       context: context,
+      backgroundColor: kWhite,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      builder: (_) => Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+      builder: (_) {
+        return SafeArea(
+          bottom: true,
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                // "Cantolan"
+                Container(
+                  width: 40,
+                  height: 4,
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            item.title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: kPrimaryDark,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            item.body ?? '',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: kBlack,
+                              height: 1.4,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kTeal,
+                    foregroundColor: kWhite,
+                    minimumSize: const Size(double.infinity, 48),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Paham'),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            Text(item.body ?? ''),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
