@@ -17,54 +17,54 @@ Berikut adalah beberapa tampilan dari aplikasi Traveljoy:
 <table>
   <tr>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_1.jpeg" width="170" alt="Caption 1">
+      <img src="assets/screenshot/screenshot_1.jpeg" width="170" alt="Caption 1">
       <br>
       <sub><b>Caption 1</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_2.jpeg" width="170" alt="Caption 2">
+      <img src="assets/screenshot/screenshot_2.jpeg" width="170" alt="Caption 2">
       <br>
       <sub><b>Caption 2</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_3.jpeg" width="170" alt="Caption 3">
+      <img src="assets/screenshot/screenshot_3.jpeg" width="170" alt="Caption 3">
       <br>
       <sub><b>Caption 3</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_4.jpeg" width="170" alt="Caption 4">
+      <img src="assets/screenshot/screenshot_4.jpeg" width="170" alt="Caption 4">
       <br>
       <sub><b>Caption 4</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_5.jpeg" width="170" alt="Caption 5">
+      <img src="assets/screenshot/screenshot_5.jpeg" width="170" alt="Caption 5">
       <br>
       <sub><b>Caption 5</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_6.jpeg" width="170" alt="Caption 6">
+      <img src="assets/screenshot/screenshot_6.jpeg" width="170" alt="Caption 6">
       <br>
       <sub><b>Caption 6</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_7.jpeg" width="170" alt="Caption 7">
+      <img src="assets/screenshot/screenshot_7.jpeg" width="170" alt="Caption 7">
       <br>
       <sub><b>Caption 7</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_8.jpeg" width="170" alt="Caption 8">
+      <img src="assets/screenshot/screenshot_8.jpeg" width="170" alt="Caption 8">
       <br>
       <sub><b>Caption 8</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_9.jpeg" width="170" alt="Caption 9">
+      <img src="assets/screenshot/screenshot_9.jpeg" width="170" alt="Caption 9">
       <br>
       <sub><b>Caption 9</b></sub>
     </td>
     <td align="center">
-      <img src="assets/images/screenshot/screenshot_10.jpeg" width="170" alt="Caption 10">
+      <img src="assets/screenshot/screenshot_10.jpeg" width="170" alt="Caption 10">
       <br>
       <sub><b>Caption 10</b></sub>
     </td>
@@ -122,7 +122,7 @@ Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di mesin lokal A
 3.  **Buat File Konfigurasi Rahasia**
     Buat file baru di dalam folder `assets/` dengan nama `secret.json`.
     ```
-    /assets/secret.json
+    /assets/secrets.json
     ```
 
 4.  **Isi File `secret.json`**
