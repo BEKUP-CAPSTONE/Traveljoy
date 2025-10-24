@@ -19,54 +19,54 @@ Berikut adalah beberapa tampilan dari aplikasi Traveljoy:
     <td align="center">
       <img src="assets/screenshot/screenshot_1.jpeg" width="170" alt="Caption 1">
       <br>
-      <sub><b>Caption 1</b></sub>
+      <sub><b>Onboarding</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_2.jpeg" width="170" alt="Caption 2">
       <br>
-      <sub><b>Caption 2</b></sub>
+      <sub><b>Login</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_3.jpeg" width="170" alt="Caption 3">
       <br>
-      <sub><b>Caption 3</b></sub>
+      <sub><b>Register</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_4.jpeg" width="170" alt="Caption 4">
       <br>
-      <sub><b>Caption 4</b></sub>
+      <sub><b>Home</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_5.jpeg" width="170" alt="Caption 5">
       <br>
-      <sub><b>Caption 5</b></sub>
+      <sub><b>Detail</b></sub>
     </td>
   </tr>
   <tr>
     <td align="center">
       <img src="assets/screenshot/screenshot_6.jpeg" width="170" alt="Caption 6">
       <br>
-      <sub><b>Caption 6</b></sub>
+      <sub><b>Itinerary</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_7.jpeg" width="170" alt="Caption 7">
       <br>
-      <sub><b>Caption 7</b></sub>
+      <sub><b>Buat Itinerary</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_8.jpeg" width="170" alt="Caption 8">
       <br>
-      <sub><b>Caption 8</b></sub>
+      <sub><b>Favorite</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_9.jpeg" width="170" alt="Caption 9">
       <br>
-      <sub><b>Caption 9</b></sub>
+      <sub><b>Kategori Wisata</b></sub>
     </td>
     <td align="center">
       <img src="assets/screenshot/screenshot_10.jpeg" width="170" alt="Caption 10">
       <br>
-      <sub><b>Caption 10</b></sub>
+      <sub><b>Profile</b></sub>
     </td>
   </tr>
 </table>
