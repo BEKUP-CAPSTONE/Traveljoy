@@ -34,40 +34,6 @@ class NotificationProvider extends ChangeNotifier {
         'body': body,
         'data': data,
       });
-
-      // Fetch ulang agar list terupdate
-      await fetchNotifications(userId);
     });
-  }
-
-  Future<void> fetchNotifications(String userId) async {
-    final response = await supabase
-        .from('notifications')
-        .select()
-        .eq('user_id', userId)
-        .order('created_at', ascending: false);
-
-    _notifications = (response as List)
-        .map((e) => NotificationModel.fromJson(e))
-        .toList();
-    notifyListeners();
-  }
-
-  Future<void> markAsRead(String id) async {
-    await supabase.from('notifications').update({'is_read': true}).eq('id', id);
-    _notifications = _notifications.map((n) {
-      if (n.id == id) {
-        return NotificationModel(
-          id: n.id,
-          title: n.title,
-          body: n.body,
-          data: n.data,
-          isRead: true,
-          createdAt: n.createdAt,
-        );
-      }
-      return n;
-    }).toList();
-    notifyListeners();
   }
 }

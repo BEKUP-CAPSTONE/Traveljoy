@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:traveljoy/providers/announcements_provider.dart';
 import 'package:traveljoy/providers/auth_provider.dart';
 import 'package:traveljoy/providers/history_provider.dart';
 import 'package:traveljoy/providers/notification_provider.dart';
@@ -127,6 +128,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => ItineraryProvider()),
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
+        ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
         ChangeNotifierProvider(create: (_) => ProfileProvider(Supabase.instance.client)),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
