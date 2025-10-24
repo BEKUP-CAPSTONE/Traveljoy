@@ -227,7 +227,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Paham'),
+                  child: const Text('Paham',
+                    style: TextStyle(
+                      color: kWhite,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),),
                 ),
               ],
             ),

@@ -8,7 +8,72 @@
 
 Proyek ini merupakan Capstone Project untuk program **BEKUP Create: Upskilling Bootcamp 2025** (ID Tim: B25-PG009), dengan tema "Inovasi Teknologi Untuk Digitalisasi Wisata Nusantara".
 
-## 1. Latar Belakang & Masalah
+---
+
+## 🎨 Tampilan Aplikasi (Screenshots)
+
+Berikut adalah beberapa tampilan dari aplikasi Traveljoy:
+
+<table>
+  <tr>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_1.jpeg" width="170" alt="Caption 1">
+      <br>
+      <sub><b>Caption 1</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_2.jpeg" width="170" alt="Caption 2">
+      <br>
+      <sub><b>Caption 2</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_3.jpeg" width="170" alt="Caption 3">
+      <br>
+      <sub><b>Caption 3</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_4.jpeg" width="170" alt="Caption 4">
+      <br>
+      <sub><b>Caption 4</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_5.jpeg" width="170" alt="Caption 5">
+      <br>
+      <sub><b>Caption 5</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_6.jpeg" width="170" alt="Caption 6">
+      <br>
+      <sub><b>Caption 6</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_7.jpeg" width="170" alt="Caption 7">
+      <br>
+      <sub><b>Caption 7</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_8.jpeg" width="170" alt="Caption 8">
+      <br>
+      <sub><b>Caption 8</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_9.jpeg" width="170" alt="Caption 9">
+      <br>
+      <sub><b>Caption 9</b></sub>
+    </td>
+    <td align="center">
+      <img src="assets/images/screenshot/screenshot_10.jpeg" width="170" alt="Caption 10">
+      <br>
+      <sub><b>Caption 10</b></sub>
+    </td>
+  </tr>
+</table>
+
+---
+
+## 💡 1. Latar Belakang & Masalah
 
 Sektor pariwisata di Indonesia merupakan sektor penting, namun digitalisasinya masih terbatas. Sebagian besar aplikasi wisata yang ada saat ini hanya berfungsi sebagai katalog destinasi yang statis.
 
@@ -16,7 +81,9 @@ Wisatawan (terutama generasi muda) menginginkan pengalaman yang cepat, personal,
 
 **Traveljoy** hadir sebagai solusi untuk mengatasi masalah ini. Aplikasi ini bukan sekadar katalog, melainkan "asisten perjalanan digital yang cerdas, interaktif, dan menyenangkan" yang memanfaatkan kekuatan Generative AI (Gemini API) dan backend modern (Supabase).
 
-## 2. Fitur Utama
+---
+
+## ✨ 2. Fitur Utama
 
 Traveljoy dirancang untuk memberikan pengalaman wisata digital yang lengkap:
 
@@ -26,7 +93,76 @@ Traveljoy dirancang untuk memberikan pengalaman wisata digital yang lengkap:
 * **Autentikasi Pengguna**: Sistem login dan manajemen pengguna yang aman menggunakan Supabase Auth.
 * **Notifikasi Harian**: Fitur notifikasi untuk meningkatkan keterlibatan (engagement) pengguna.
 
-## 3. Teknologi yang Digunakan
+---
+
+## ⚙️ 3. Instalasi & Konfigurasi
+
+Ikuti langkah-langkah di bawah ini untuk menjalankan proyek ini di mesin lokal Anda.
+
+### Prasyarat
+
+* Pastikan Anda telah menginstal [**Flutter SDK**](https://docs.flutter.dev/get-started/install) (versi 3.19 atau lebih baru).
+* Sebuah IDE seperti [**VS Code**](https://code.visualstudio.com/) atau [**Android Studio**](https://developer.android.com/studio).
+* Akun [**Supabase**](https://supabase.com/) untuk mendapatkan URL dan Kunci API.
+* API Key [**Google AI (Gemini)**](https://aistudio.google.com/app/apikey).
+
+### Langkah-langkah Instalasi
+
+1.  **Clone Repository**
+    Buka terminal Anda dan clone repository ini:
+    ```bash
+    git clone [https://github.com/BEKUP-CAPSTONE/Traveljoy.git](https://github.com/BEKUP-CAPSTONE/Traveljoy.git)
+    ```
+
+2.  **Masuk ke Direktori Proyek**
+    ```bash
+    cd Traveljoy
+    ```
+
+3.  **Buat File Konfigurasi Rahasia**
+    Buat file baru di dalam folder `assets/` dengan nama `secret.json`.
+    ```
+    /assets/secret.json
+    ```
+
+4.  **Isi File `secret.json`**
+    Salin dan tempel format JSON di bawah ini ke dalam file `secrets.json` Anda, lalu ganti `...` dengan kredensial Anda yang sebenarnya.
+
+    ```json
+    {
+      "SUPABASE_URL": "URL_PROYEK_SUPABASE_ANDA",
+      "SUPABASE_ANON_KEY": "KUNCI_ANON_SUPABASE_ANDA",
+      "GEMINI_API_KEY": "API_KEY_GEMINI_ANDA"
+    }
+    ```
+    > **Penting:** Dapatkan kredensial ini dari dashboard proyek Supabase Anda (di bawah *Settings* > *API*) dan dari Google AI Studio.
+
+5.  **Daftarkan Aset di `pubspec.yaml`**
+    Buka file `pubspec.yaml` dan pastikan file `secret.json` sudah terdaftar di bawah bagian `assets`:
+
+    ```yaml
+    flutter:
+      uses-material-design: true
+      assets:
+        - assets/
+        * - assets/secrets.json # <--- Pastikan baris ini ada
+    ```
+
+6.  **Instal Dependensi**
+    Jalankan perintah berikut untuk mengunduh semua paket yang diperlukan:
+    ```bash
+    flutter pub get
+    ```
+
+7.  **Jalankan Aplikasi**
+    Hubungkan perangkat (emulator atau fisik) dan jalankan aplikasi:
+    ```bash
+    flutter run
+    ```
+
+---
+
+## 💻 4. Teknologi yang Digunakan
 
 Proyek ini dibangun dengan fokus pada pengembangan frontend dan backend, menggunakan teknologi berikut:
 
@@ -41,7 +177,9 @@ Proyek ini dibangun dengan fokus pada pengembangan frontend dan backend, menggun
 | **Kolaborasi** | GitHub & Google Suite | Menggunakan GitHub untuk version control serta Google Calendar & Meet untuk sinkronisasi tim. |
 | **API Testing** | Postman | Membantu proses pengujian dan verifikasi API antara frontend dan backend. |
 
-## 4. Tim Pengembang (B25-PG009)
+---
+
+## 🤝 5. Tim Pengembang (B25-PG009)
 
 Proyek ini dikerjakan oleh 4 anggota tim dengan pembagian tugas yang terstruktur:
 
@@ -55,7 +193,7 @@ Proyek ini dikerjakan oleh 4 anggota tim dengan pembagian tugas yang terstruktur
 * **(BC25B009) - Dimas Aswito**
   * Bertanggung jawab atas setup Supabase (Auth, Database), API internal, dan sistem penyimpanan Bookmark.
 * **(BC25B002) - Muhammad Salman Alfarisy**
-  * Bertanggung jawab atas arsitektur backend AI, integrasi Gemini API, dan penyempurnaan request itinerary.
+  * Bertanggung jawab atas arstruktur backend AI, integrasi Gemini API, dan penyempurnaan request itinerary.
 
 ---
-*Proyek ini dibuat dalam jangka waktu 5 minggu sebagai bagian dari BEKUP Create 2025, bekerja sama dengan EKRAF dan Dicoding*.
+*Proyek ini dibuat dalam jangka waktu 5 minggu sebagai bagian dari BEKUP Create 2025, bekerja sama dengan EKRAF dan Dicoding.*

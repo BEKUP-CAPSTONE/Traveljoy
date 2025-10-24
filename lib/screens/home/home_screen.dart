@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:traveljoy/providers/wisata_provider.dart';
@@ -19,6 +20,9 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
+
+  late final ScrollController _scrollController;
+  bool _isScrolled = false;
 
   List<Map<String, dynamic>> _searchResults = [];
   bool _isSearching = false;
@@ -46,9 +50,28 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
   int? _selectedIdDaerah;
 
+  void _scrollListener() {
+    if (_scrollController.offset > kToolbarHeight && !_isScrolled) {
+      if (mounted) {
+        setState(() {
+          _isScrolled = true;
+        });
+      }
+    } else if (_scrollController.offset <= kToolbarHeight && _isScrolled) {
+      if (mounted) {
+        setState(() {
+          _isScrolled = false;
+        });
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
+    _scrollController = ScrollController();
+    _scrollController.addListener(_scrollListener);
 
     final userId = context.read<AuthProvider>().userId;
     if (userId != null) {
@@ -68,6 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+
+
   void _startAutoScroll() {
     _bannerTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (_bannerImages.isNotEmpty && _bannerPageController.hasClients) {
@@ -86,6 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
     _searchController.dispose();
     _bannerPageController.dispose();
     _bannerTimer?.cancel();
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -786,73 +813,104 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final wisataProvider = context.watch<WisataProvider>();
 
-    return Scaffold(
-      backgroundColor: kWhite,
-      body: SafeArea(
-        child: wisataProvider.isLoading
-            ? Center(child: CircularProgressIndicator(color: kTeal))
-            : ListView(
-          padding: EdgeInsets.zero,
+    final double statusBarHeight = MediaQuery.of(context).padding.top;
+
+    final SystemUiOverlayStyle currentStyle = _isScrolled
+        ? SystemUiOverlayStyle(
+      statusBarColor: kWhite,
+      statusBarIconBrightness: Brightness.dark,
+    )
+        : const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+    );
+
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: currentStyle,
+      child: Scaffold(
+        backgroundColor: kWhite,
+        body: Stack(
           children: [
-            AnimatedSwitcher(
-              duration: const Duration(seconds: 2),
-              child: Container(
-                key: ValueKey<int>(_currentBackgroundIndex),
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/onboarding1.jpeg",
+            SafeArea(
+              top: false,
+              child: wisataProvider.isLoading
+                  ? Center(child: CircularProgressIndicator(color: kTeal))
+                  : ListView(
+                controller: _scrollController,
+                padding: EdgeInsets.zero,
+                children: [
+                  AnimatedSwitcher(
+                    duration: const Duration(seconds: 2),
+                    child: Container(
+                      key: ValueKey<int>(_currentBackgroundIndex),
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/onboarding1.jpeg",
+                          ),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
+                            colors: [
+                              Colors.white,
+                              Colors.white.withOpacity(0.0),
+                              Colors.black.withOpacity(0.4),
+                            ],
+                            stops: const [
+                              0.0,
+                              0.5,
+                              1.0,
+                            ],
+                          ),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: statusBarHeight + 16),
+                              _buildHeader(context),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                    fit: BoxFit.cover,
                   ),
-                ),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.center,
-                      colors: [
-                        Colors.white,
-                        Colors.white.withOpacity(0.0),
-                        Colors.black.withOpacity(0.4),
-                      ],
-                      stops: const [
-                        0.0,
-                        0.5,
-                        1.0,
-                      ],
-                    ),
-                  ),
-                  child: Padding(
+
+                  Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        _buildKategoriGrid(wisataProvider),
+                        const SizedBox(height: 10),
+                        _buildFilterTabs(),
                         const SizedBox(height: 20),
-                        _buildHeader(context),
+                        _buildPopularWisata(
+                          context,
+                          wisataProvider,
+                          context.watch<FavoriteProvider>(),
+                        ),
+                        const SizedBox(height: 30),
+                        _buildSpecialForYou(context, wisataProvider),
+                        const SizedBox(height: 30),
                       ],
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                children: [
-                  _buildKategoriGrid(wisataProvider),
-                  const SizedBox(height: 10),
-                  _buildFilterTabs(),
-                  const SizedBox(height: 20),
-                  _buildPopularWisata(
-                    context,
-                    wisataProvider,
-                    context.watch<FavoriteProvider>(),
-                  ),
-                  const SizedBox(height: 30),
-                  _buildSpecialForYou(context, wisataProvider),
-                  const SizedBox(height: 30),
-                ],
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                height: statusBarHeight,
+                color: _isScrolled ? kWhite : Colors.transparent,
               ),
             ),
           ],
