@@ -31,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   @override
   Widget build(BuildContext context) {
-
     final authProvider = Provider.of<AuthProvider>(context);
 
     return Scaffold(
@@ -39,7 +38,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 24.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -89,7 +91,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 _buildRegisterButton(context, authProvider),
 
                 // Error message
-                if (authProvider.errorMessage != null && !authProvider.isLoading)
+                if (authProvider.errorMessage != null &&
+                    !authProvider.isLoading)
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
@@ -248,28 +251,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
       onPressed: authProvider.isLoading
           ? null
           : () async {
-        if (_passwordController.text != _retypePasswordController.text) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Password tidak cocok.')),
-          );
-          return;
-        }
+              if (_passwordController.text != _retypePasswordController.text) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Password tidak cocok.')),
+                );
+                return;
+              }
 
-        if (_emailController.text.isEmpty ||
-            _passwordController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email dan Password wajib diisi.'),
-            ),
-          );
-          return;
-        }
+              if (_emailController.text.isEmpty ||
+                  _passwordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Email dan Password wajib diisi.'),
+                  ),
+                );
+                return;
+              }
 
-        await authProvider.signUp(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-      },
+              await authProvider.signUp(
+                email: _emailController.text.trim(),
+                password: _passwordController.text,
+              );
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
@@ -278,18 +281,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
       child: authProvider.isLoading
           ? const SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
-      )
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+            )
           : const Text(
-        'Daftar',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: kWhite,
-        ),
-      ),
+              'Daftar',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: kWhite,
+              ),
+            ),
     );
   }
 

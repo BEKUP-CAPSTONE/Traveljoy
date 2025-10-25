@@ -19,7 +19,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      await context.read<ProfileProvider>().loadCurrentProfileName(_nameController);
+      await context.read<ProfileProvider>().loadCurrentProfileName(
+        _nameController,
+      );
     });
   }
 
@@ -28,7 +30,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isSaving = true);
 
     final profileProvider = context.read<ProfileProvider>();
-    final success = await profileProvider.updateProfileName(_nameController.text);
+    final success = await profileProvider.updateProfileName(
+      _nameController.text,
+    );
 
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -52,9 +56,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       backgroundColor: primaryColor,
       foregroundColor: kWhite,
       minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       elevation: 2,
     );
 
@@ -88,9 +90,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
       body: Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: primaryColor,
-          ),
+          colorScheme: Theme.of(
+            context,
+          ).colorScheme.copyWith(primary: primaryColor),
         ),
         child: Padding(
           padding: const EdgeInsets.all(16),
@@ -125,8 +127,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       vertical: 14,
                     ),
                   ),
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Nama tidak boleh kosong' : null,
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Nama tidak boleh kosong'
+                      : null,
                 ),
 
                 const SizedBox(height: 24),
@@ -135,13 +138,13 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   icon: const Icon(Icons.save),
                   label: _isSaving
                       ? const SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: CircularProgressIndicator(
-                      color: kWhite,
-                      strokeWidth: 3,
-                    ),
-                  )
+                          height: 24,
+                          width: 24,
+                          child: CircularProgressIndicator(
+                            color: kWhite,
+                            strokeWidth: 3,
+                          ),
+                        )
                       : const Text('Simpan'),
                   style: buttonStyle,
                 ),

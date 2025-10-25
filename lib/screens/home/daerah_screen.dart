@@ -60,72 +60,74 @@ class _DaerahScreenState extends State<DaerahScreen> {
       body: SafeArea(
         top: false,
         child: _isLoading
-            ? Center(
-          child: CircularProgressIndicator(
-            color: kTeal,
-          ),
-        )
+            ? Center(child: CircularProgressIndicator(color: kTeal))
             : ListView.builder(
-          padding: const EdgeInsets.symmetric(
-              horizontal: 16.0, vertical: 20.0),
-          itemCount: _daerahList.length,
-          itemBuilder: (context, index) {
-            final daerah = _daerahList[index];
-
-            return Card(
-              elevation: 3,
-              shadowColor: kNeutralGrey.withOpacity(0.2),
-              color: kWhite,
-              clipBehavior: Clip.antiAlias,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-                side: BorderSide(
-                  color: kNeutralGrey.withOpacity(0.5),
-                  width: 0.8,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 20.0,
                 ),
-              ),
-              margin: const EdgeInsets.only(bottom: 12),
-              child: InkWell(
-                onTap: () =>
-                    context.push('/wisata-daerah/${daerah['id']}'),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16.0, vertical: 14.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                itemCount: _daerahList.length,
+                itemBuilder: (context, index) {
+                  final daerah = _daerahList[index];
+
+                  return Card(
+                    elevation: 3,
+                    shadowColor: kNeutralGrey.withOpacity(0.2),
+                    color: kWhite,
+                    clipBehavior: Clip.antiAlias,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side: BorderSide(
+                        color: kNeutralGrey.withOpacity(0.5),
+                        width: 0.8,
+                      ),
+                    ),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    child: InkWell(
+                      onTap: () =>
+                          context.push('/wisata-daerah/${daerah['id']}'),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 14.0,
+                        ),
+                        child: Row(
                           children: [
-                            Text(
-                              daerah['nama_daerah'] ?? '-',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                                color: kPrimaryDark,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    daerah['nama_daerah'] ?? '-',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                      color: kPrimaryDark,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Provinsi ${daerah['provinsi'] ?? '-'}",
+                                    style: TextStyle(
+                                      color: kNeutralGrey,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Provinsi ${daerah['provinsi'] ?? '-'}",
-                              style: TextStyle(
-                                color: kNeutralGrey,
-                                fontSize: 14,
-                              ),
+                            const SizedBox(width: 10),
+                            Icon(
+                              Icons.chevron_right,
+                              color: kNeutralGrey.withOpacity(0.8),
                             ),
                           ],
                         ),
                       ),
-                      const SizedBox(width: 10),
-                      Icon(Icons.chevron_right,
-                          color: kNeutralGrey.withOpacity(0.8)),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

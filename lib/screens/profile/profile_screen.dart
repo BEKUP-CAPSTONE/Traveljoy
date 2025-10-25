@@ -14,7 +14,6 @@ class ProfileScreen extends StatefulWidget {
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-
 class _ProfileScreenState extends State<ProfileScreen> {
   String _getUserName(AuthProvider authProvider) {
     final user = authProvider.supabase.auth.currentUser;
@@ -42,7 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     profileProvider.loadProfileData();
   }
 
-
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
@@ -58,7 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ? authProvider.userEmail
         : "guest@example.com";
 
-    final String userNameDisplay = profileProvider.profileName?.isNotEmpty == true
+    final String userNameDisplay =
+        profileProvider.profileName?.isNotEmpty == true
         ? profileProvider.profileName!
         : userEmail.split('@').first.toUpperCase();
 
@@ -267,7 +266,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               return AlertDialog(
                 title: const Text('Konfirmasi Logout'),
                 backgroundColor: Colors.white,
-                content: const Text('Apakah kamu yakin ingin keluar dari akun ini?'),
+                content: const Text(
+                  'Apakah kamu yakin ingin keluar dari akun ini?',
+                ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),

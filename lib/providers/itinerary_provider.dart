@@ -29,7 +29,9 @@ class ItineraryProvider extends ChangeNotifier {
         debugPrint('📊 [ItineraryProvider] Total itinerary user: $count');
         return count;
       } else {
-        debugPrint('ℹ️ [ItineraryProvider] Tidak ada data itinerary untuk $userId');
+        debugPrint(
+          'ℹ️ [ItineraryProvider] Tidak ada data itinerary untuk $userId',
+        );
         return 0;
       }
     } catch (e) {
@@ -37,7 +39,6 @@ class ItineraryProvider extends ChangeNotifier {
       return 0;
     }
   }
-
 
   Future<bool> generateItinerary({
     required String daerah,

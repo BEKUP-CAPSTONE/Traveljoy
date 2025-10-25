@@ -28,9 +28,13 @@ class WisataProvider extends ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchWisataByKategori(int idKategori) async {
+  Future<List<Map<String, dynamic>>> fetchWisataByKategori(
+    int idKategori,
+  ) async {
     try {
-      debugPrint('🔍 [WisataProvider] Ambil wisata untuk kategori ID: $idKategori');
+      debugPrint(
+        '🔍 [WisataProvider] Ambil wisata untuk kategori ID: $idKategori',
+      );
       _isLoading = true;
       notifyListeners();
 
@@ -40,10 +44,13 @@ class WisataProvider extends ChangeNotifier {
           .eq('id_kategori', idKategori)
           .order('created_at', ascending: false);
 
-      final List<Map<String, dynamic>> data =
-      List<Map<String, dynamic>>.from(response);
+      final List<Map<String, dynamic>> data = List<Map<String, dynamic>>.from(
+        response,
+      );
 
-      debugPrint('✅ [WisataProvider] Berhasil ambil ${data.length} data wisata.');
+      debugPrint(
+        '✅ [WisataProvider] Berhasil ambil ${data.length} data wisata.',
+      );
       return data;
     } catch (e) {
       debugPrint('❌ [WisataProvider] Gagal ambil wisata by kategori: $e');
@@ -61,7 +68,9 @@ class WisataProvider extends ChangeNotifier {
 
       final response = await supabase
           .from('wisata')
-          .select('id, nama_wisata, deskripsi_wisata, gambar_url, daerah(nama_daerah)')
+          .select(
+            'id, nama_wisata, deskripsi_wisata, gambar_url, daerah(nama_daerah)',
+          )
           .limit(6);
 
       _wisata = List<Map<String, dynamic>>.from(response);
@@ -111,7 +120,10 @@ class WisataProvider extends ChangeNotifier {
 
   Future<List<Map<String, dynamic>>> fetchDaerah() async {
     try {
-      final response = await supabase.from('daerah').select('*').order('nama_daerah');
+      final response = await supabase
+          .from('daerah')
+          .select('*')
+          .order('nama_daerah');
       return response;
     } catch (e) {
       debugPrint('❌ [Daerah] Error fetching daerah: $e');
@@ -147,6 +159,4 @@ class WisataProvider extends ChangeNotifier {
       return null;
     }
   }
-
-
 }

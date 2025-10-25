@@ -29,13 +29,9 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
       backgroundColor: kTeal,
       foregroundColor: kWhite,
       minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
-      textStyle: const TextStyle(
-        fontSize: 16,
-      ),
+      textStyle: const TextStyle(fontSize: 16),
     );
 
     final cardShape = RoundedRectangleBorder(
@@ -87,11 +83,7 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.info_outline_rounded,
-                    color: kTeal,
-                    size: 20,
-                  ),
+                  Icon(Icons.info_outline_rounded, color: kTeal, size: 20),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -119,53 +111,55 @@ class _ItineraryScreenState extends State<ItineraryScreen> {
                   : historyProvider.histories.isEmpty
                   ? const Center(child: Text('Belum ada itinerary tersimpan'))
                   : ListView.builder(
-                itemCount: historyProvider.histories.length,
-                itemBuilder: (context, index) {
-                  final item = historyProvider.histories[index];
+                      itemCount: historyProvider.histories.length,
+                      itemBuilder: (context, index) {
+                        final item = historyProvider.histories[index];
 
-                  return Card(
-                    color: kWhite,
-                    margin: const EdgeInsets.only(bottom: 12),
-                    shape: cardShape,
-                    elevation: 0,
-                    child: ListTile(
-                      title: Text(
-                        item['judul'] ?? 'Tanpa judul',
-                      ),
-                      subtitle: Text(
-                        item['created_at'] != null
-                            ? item['created_at'].toString().substring(
-                          0,
-                          10,
-                        )
-                            : '-',
-                      ),
-                      trailing: const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 16,
-                        color: kPrimaryDark,
-                      ),
-                      onTap: () {
-                        final historyData = item['preferensi'];
+                        return Card(
+                          color: kWhite,
+                          margin: const EdgeInsets.only(bottom: 12),
+                          shape: cardShape,
+                          elevation: 0,
+                          child: ListTile(
+                            title: Text(item['judul'] ?? 'Tanpa judul'),
+                            subtitle: Text(
+                              item['created_at'] != null
+                                  ? item['created_at'].toString().substring(
+                                      0,
+                                      10,
+                                    )
+                                  : '-',
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: kPrimaryDark,
+                            ),
+                            onTap: () {
+                              final historyData = item['preferensi'];
 
-                        if (historyData != null && historyData is Map<String, dynamic>) {
+                              if (historyData != null &&
+                                  historyData is Map<String, dynamic>) {
+                                context
+                                    .read<ItineraryProvider>()
+                                    .loadFromHistory(historyData);
 
-                          context.read<ItineraryProvider>().loadFromHistory(historyData);
-
-                          context.push(
-                            '/itinerary/result',
-                            extra: {'isFromHistory': true},
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Gagal memuat data riwayat')),
-                          );
-                        }
+                                context.push(
+                                  '/itinerary/result',
+                                  extra: {'isFromHistory': true},
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Gagal memuat data riwayat'),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        );
                       },
                     ),
-                  );
-                },
-              ),
             ),
           ],
         ),

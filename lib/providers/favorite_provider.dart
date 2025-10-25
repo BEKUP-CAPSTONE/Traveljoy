@@ -13,7 +13,9 @@ class FavoriteProvider extends ChangeNotifier {
 
     final response = await supabase
         .from('bookmark')
-        .select('id, wisata_id, wisata(nama_wisata, gambar_url, deskripsi_wisata, harga_tiket, alamat)')
+        .select(
+          'id, wisata_id, wisata(nama_wisata, gambar_url, deskripsi_wisata, harga_tiket, alamat)',
+        )
         .eq('user_id', user.id)
         .order('created_at', ascending: false);
 
@@ -45,12 +47,11 @@ class FavoriteProvider extends ChangeNotifier {
       await fetchFavorites();
     } catch (e) {
       print('❌ Error insert bookmark: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Sudah ada di favorite')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Sudah ada di favorite')));
     }
   }
-
 
   /// Hapus dari favorit
   Future<void> removeFavorite(BuildContext context, int wisataId) async {
@@ -66,9 +67,9 @@ class FavoriteProvider extends ChangeNotifier {
     favorites.removeWhere((item) => item['wisata_id'] == wisataId);
     notifyListeners();
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Dihapus dari favorite')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Dihapus dari favorite')));
   }
 
   bool isFavorite(int wisataId) {

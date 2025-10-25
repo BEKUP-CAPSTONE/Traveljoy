@@ -176,7 +176,7 @@ class AuthProvider with ChangeNotifier {
       final scopes = ['email', 'profile'];
       final authorization =
           await googleUser.authorizationClient.authorizationForScopes(scopes) ??
-              await googleUser.authorizationClient.authorizeScopes(scopes);
+          await googleUser.authorizationClient.authorizeScopes(scopes);
 
       final idToken = googleUser.authentication.idToken;
       if (idToken == null) throw AuthException('ID Token tidak ditemukan.');
@@ -206,8 +206,11 @@ class AuthProvider with ChangeNotifier {
             .maybeSingle();
 
         final name =
-            user.userMetadata?['name'] ?? user.email?.split('@').first ?? 'User Baru';
-        final avatarUrl = user.userMetadata?['avatar_url'] ??
+            user.userMetadata?['name'] ??
+            user.email?.split('@').first ??
+            'User Baru';
+        final avatarUrl =
+            user.userMetadata?['avatar_url'] ??
             user.userMetadata?['picture'] ??
             null;
 

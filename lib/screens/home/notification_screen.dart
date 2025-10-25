@@ -52,11 +52,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             const SizedBox(height: 8),
             Text(
               "Sepertinya status anda kosong. Kami akan memberi tahu Anda saat pembaruan tiba!",
-              style: TextStyle(
-                fontSize: 15,
-                color: kHintColor,
-                height: 1.4,
-              ),
+              style: TextStyle(fontSize: 15, color: kHintColor, height: 1.4),
               textAlign: TextAlign.center,
             ),
           ],
@@ -73,12 +69,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Pengumuman',
+        title: const Text(
+          'Pengumuman',
           style: TextStyle(
             color: kBlack,
             fontSize: 18,
             fontWeight: FontWeight.bold,
-          ),),
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -94,64 +92,72 @@ class _NotificationScreenState extends State<NotificationScreen> {
           child: announcements.isEmpty
               ? _buildEmptyState()
               : ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: announcements.length,
-            itemBuilder: (context, index) {
-              final item = announcements[index];
-              final isRead = provider.isRead(item.id);
+                  padding: const EdgeInsets.all(16),
+                  itemCount: announcements.length,
+                  itemBuilder: (context, index) {
+                    final item = announcements[index];
+                    final isRead = provider.isRead(item.id);
 
-              return Card(
-                elevation: 3,
-                shadowColor: kNeutralGrey.withOpacity(0.2),
-                color: isRead ? kWhite : Colors.grey.shade200,
-                clipBehavior: Clip.antiAlias,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                  side: BorderSide(
-                    color: kNeutralGrey.withOpacity(0.5),
-                    width: 0.8,
-                  ),
-                ),
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                  onTap: () {
-                    provider.markAsRead(item.id);
-                    _showDetail(item);
-                  },
-
-                  title: Text(
-                    item.title,
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: isRead ? Colors.black87 : kPrimaryDark,
-                    ),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 4),
-                      Text(
-                        item.body ?? '',
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: isRead ? Colors.black54 : Colors.black87,
+                    return Card(
+                      elevation: 3,
+                      shadowColor: kNeutralGrey.withOpacity(0.2),
+                      color: isRead ? kWhite : Colors.grey.shade200,
+                      clipBehavior: Clip.antiAlias,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: BorderSide(
+                          color: kNeutralGrey.withOpacity(0.5),
+                          width: 0.8,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      Text(
-                        _timeAgo(item.createdAt),
-                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      margin: const EdgeInsets.only(bottom: 12),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.fromLTRB(
+                          20,
+                          12,
+                          20,
+                          12,
+                        ),
+                        onTap: () {
+                          provider.markAsRead(item.id);
+                          _showDetail(item);
+                        },
+
+                        title: Text(
+                          item.title,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isRead ? Colors.black87 : kPrimaryDark,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(height: 4),
+                            Text(
+                              item.body ?? '',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: isRead ? Colors.black54 : Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              _timeAgo(item.createdAt),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
-              );
-            },
-          ),
         ),
       ),
     );
@@ -173,7 +179,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 // "Cantolan"
                 Container(
                   width: 40,
@@ -227,12 +232,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     ),
                   ),
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Paham',
+                  child: const Text(
+                    'Paham',
                     style: TextStyle(
                       color: kWhite,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
-                    ),),
+                    ),
+                  ),
                 ),
               ],
             ),

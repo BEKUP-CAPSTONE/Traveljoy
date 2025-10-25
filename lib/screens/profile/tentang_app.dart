@@ -31,28 +31,19 @@ class AboutAppScreen extends StatelessWidget {
             const SizedBox(height: 32),
             const Text(
               'TravelJoy',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
             const Text(
               'TravelJoy adalah aplikasi yang membantu kamu menemukan wisata '
-                  'dan membuat jadwal perjalanan menarik dengan mudah. '
-                  'Nikmati pengalaman perjalanan yang menyenangkan dan praktis '
-                  'langsung dari genggamanmu.',
+              'dan membuat jadwal perjalanan menarik dengan mudah. '
+              'Nikmati pengalaman perjalanan yang menyenangkan dan praktis '
+              'langsung dari genggamanmu.',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-                height: 1.5,
-              ),
+              style: TextStyle(fontSize: 16, height: 1.5),
             ),
             const Spacer(),
-            const Text(
-              'Versi 1.0.0',
-              style: TextStyle(color: Colors.grey),
-            ),
+            const Text('Versi 1.0.0', style: TextStyle(color: Colors.grey)),
             const SizedBox(height: 12),
           ],
         ),

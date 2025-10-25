@@ -24,7 +24,9 @@ class AnnouncementProvider extends ChangeNotifier {
 
       await _loadReadStatus();
       notifyListeners();
-      debugPrint('🟢 [AnnouncementProvider] Berhasil ambil ${_announcements.length} data announcement');
+      debugPrint(
+        '🟢 [AnnouncementProvider] Berhasil ambil ${_announcements.length} data announcement',
+      );
     } catch (e) {
       debugPrint('❌ [AnnouncementProvider] Gagal fetch announcements: $e');
     }
@@ -33,8 +35,11 @@ class AnnouncementProvider extends ChangeNotifier {
   Future<void> _loadReadStatus() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      _readAnnouncements = prefs.getStringList('read_announcements')?.toSet() ?? {};
-      debugPrint('🟢 [AnnouncementProvider] Status read loaded: ${_readAnnouncements.length} item');
+      _readAnnouncements =
+          prefs.getStringList('read_announcements')?.toSet() ?? {};
+      debugPrint(
+        '🟢 [AnnouncementProvider] Status read loaded: ${_readAnnouncements.length} item',
+      );
     } catch (e) {
       debugPrint('❌ [AnnouncementProvider] Gagal load read status: $e');
     }
@@ -54,7 +59,10 @@ class AnnouncementProvider extends ChangeNotifier {
       if (!_readAnnouncements.contains(id)) {
         _readAnnouncements.add(id);
         final prefs = await SharedPreferences.getInstance();
-        await prefs.setStringList('read_announcements', _readAnnouncements.toList());
+        await prefs.setStringList(
+          'read_announcements',
+          _readAnnouncements.toList(),
+        );
         notifyListeners();
         debugPrint('✅ [AnnouncementProvider] Marked "$id" as read');
       }

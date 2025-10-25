@@ -41,7 +41,10 @@ class _LoginPageState extends State<LoginScreen> {
       body: SingleChildScrollView(
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 24.0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
@@ -60,7 +63,8 @@ class _LoginPageState extends State<LoginScreen> {
                 const SizedBox(height: 30),
                 _buildLoginButton(context, authProvider),
 
-                if (authProvider.errorMessage != null && !authProvider.isLoading)
+                if (authProvider.errorMessage != null &&
+                    !authProvider.isLoading)
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
                     child: Text(
@@ -254,21 +258,21 @@ class _LoginPageState extends State<LoginScreen> {
       onPressed: authProvider.isLoading
           ? null
           : () async {
-        if (_emailController.text.isEmpty ||
-            _passwordController.text.isEmpty) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Email dan Password wajib diisi.'),
-            ),
-          );
-          return;
-        }
+              if (_emailController.text.isEmpty ||
+                  _passwordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Email dan Password wajib diisi.'),
+                  ),
+                );
+                return;
+              }
 
-        await authProvider.signIn(
-          email: _emailController.text.trim(),
-          password: _passwordController.text,
-        );
-      },
+              await authProvider.signIn(
+                email: _emailController.text.trim(),
+                password: _passwordController.text,
+              );
+            },
       style: ElevatedButton.styleFrom(
         backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 55),
@@ -277,18 +281,18 @@ class _LoginPageState extends State<LoginScreen> {
       ),
       child: authProvider.isLoading
           ? const SizedBox(
-        width: 24,
-        height: 24,
-        child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
-      )
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(color: kWhite, strokeWidth: 3),
+            )
           : const Text(
-        'Masuk',
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: kWhite,
-        ),
-      ),
+              'Masuk',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: kWhite,
+              ),
+            ),
     );
   }
 

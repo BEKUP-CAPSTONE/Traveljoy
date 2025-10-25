@@ -37,7 +37,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
 
     String formatted = numStr.replaceAllMapped(
       RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]}.',
+      (Match m) => '${m[1]}.',
     );
 
     return 'Rp$formatted';
@@ -68,9 +68,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        body: Center(child: CircularProgressIndicator(
-          color: kTeal,
-        )),
+        body: Center(child: CircularProgressIndicator(color: kTeal)),
       );
     }
 
@@ -81,7 +79,8 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
       );
     }
 
-    final String gambarUrl = (wisata!['gambar_url'] as List?)?.isNotEmpty == true
+    final String gambarUrl =
+        (wisata!['gambar_url'] as List?)?.isNotEmpty == true
         ? (wisata!['gambar_url'] as List).first
         : 'assets/images/wisataDefault.png';
 
@@ -161,11 +160,16 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
     );
   }
 
-  Widget _buildDetailSheet(BuildContext context, Map<String, dynamic> data, double sheetHeight) {
+  Widget _buildDetailSheet(
+    BuildContext context,
+    Map<String, dynamic> data,
+    double sheetHeight,
+  ) {
     final String formattedHarga = _formatRupiahManual(data['harga_tiket']);
 
     final String namaWisata = data['nama_wisata'] ?? 'Nama Wisata';
-    final String deskripsi = data['deskripsi_wisata'] ?? 'Belum ada deskripsi untuk wisata ini.';
+    final String deskripsi =
+        data['deskripsi_wisata'] ?? 'Belum ada deskripsi untuk wisata ini.';
 
     return Positioned(
       bottom: 0,
@@ -178,10 +182,7 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
           color: kWhite,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
           boxShadow: [
-            BoxShadow(
-              color: kBlack.withOpacity(0.1),
-              blurRadius: 20,
-            ),
+            BoxShadow(color: kBlack.withOpacity(0.1), blurRadius: 20),
           ],
         ),
         child: Column(
@@ -227,27 +228,49 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
                   children: [
                     Text(
                       'Ringkasan',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryDark,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       deskripsi,
                       textAlign: TextAlign.justify,
-                      style: TextStyle(color: kBlack, fontSize: 14, height: 1.5),
+                      style: TextStyle(
+                        color: kBlack,
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
                     ),
                     const SizedBox(height: 24),
 
                     Text(
                       'Informasi Detail',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kPrimaryDark),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryDark,
+                      ),
                     ),
                     const SizedBox(height: 12),
 
-                    if (data['alamat'] != null && (data['alamat'] as String).isNotEmpty)
-                      _buildDetailRow(Icons.location_on_outlined, 'Alamat', data['alamat']),
+                    if (data['alamat'] != null &&
+                        (data['alamat'] as String).isNotEmpty)
+                      _buildDetailRow(
+                        Icons.location_on_outlined,
+                        'Alamat',
+                        data['alamat'],
+                      ),
 
-                    if (data['jam_buka'] != null && (data['jam_buka'] as String).isNotEmpty)
-                      _buildDetailRow(Icons.access_time_outlined, 'Jam Operasional', data['jam_buka']),
+                    if (data['jam_buka'] != null &&
+                        (data['jam_buka'] as String).isNotEmpty)
+                      _buildDetailRow(
+                        Icons.access_time_outlined,
+                        'Jam Operasional',
+                        data['jam_buka'],
+                      ),
 
                     const SizedBox(height: 24),
                   ],
@@ -272,12 +295,16 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: TextStyle(fontWeight: FontWeight.w600, color: kPrimaryDark, fontSize: 16)),
-                const SizedBox(height: 4),
                 Text(
-                  value,
-                  style: TextStyle(color: kBlack, fontSize: 14),
+                  title,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: kPrimaryDark,
+                    fontSize: 16,
+                  ),
                 ),
+                const SizedBox(height: 4),
+                Text(value, style: TextStyle(color: kBlack, fontSize: 14)),
               ],
             ),
           ),
@@ -286,7 +313,12 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
     );
   }
 
-  Widget _buildMetricItem({required IconData icon, required Color color, required String title, required String value}) {
+  Widget _buildMetricItem({
+    required IconData icon,
+    required Color color,
+    required String title,
+    required String value,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -294,7 +326,14 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
           children: [
             Icon(icon, color: color, size: 18),
             const SizedBox(width: 4),
-            Text(value, style: TextStyle(color: kPrimaryDark, fontWeight: FontWeight.w600, fontSize: 14)),
+            Text(
+              value,
+              style: TextStyle(
+                color: kPrimaryDark,
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 4),
@@ -306,7 +345,12 @@ class _DetailWisataScreenState extends State<DetailWisataScreen> {
   Widget _buildBottomActionButton(BuildContext context, int wisataId) {
     return Container(
       color: kWhite,
-      padding: EdgeInsets.fromLTRB(24, 0, 24, MediaQuery.of(context).padding.bottom + 16),
+      padding: EdgeInsets.fromLTRB(
+        24,
+        0,
+        24,
+        MediaQuery.of(context).padding.bottom + 16,
+      ),
       child: Consumer<FavoriteProvider>(
         builder: (context, favProvider, child) {
           final bool isFav = favProvider.isFavorite(wisataId);

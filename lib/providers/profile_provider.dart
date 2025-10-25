@@ -97,9 +97,6 @@ class ProfileProvider extends ChangeNotifier {
   }
 
   Future<void> loadProfileData() async {
-    await Future.wait([
-      fetchProfileName(),
-      fetchItineraryCount(),
-    ]);
+    await Future.wait([fetchProfileName(), fetchItineraryCount()]);
   }
 }

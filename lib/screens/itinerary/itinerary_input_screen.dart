@@ -36,13 +36,9 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
       backgroundColor: kTeal,
       foregroundColor: kWhite,
       minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
-      textStyle: const TextStyle(
-        fontSize: 16,
-      ),
+      textStyle: const TextStyle(fontSize: 16),
     );
 
     final outlineBorder = OutlineInputBorder(
@@ -75,9 +71,7 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
       ),
       body: Theme(
         data: Theme.of(context).copyWith(
-          colorScheme: Theme.of(context).colorScheme.copyWith(
-            primary: kTeal,
-          ),
+          colorScheme: Theme.of(context).colorScheme.copyWith(primary: kTeal),
         ),
         child: SingleChildScrollView(
           child: Padding(
@@ -154,14 +148,13 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
                   DropdownButtonFormField<String>(
                     value: _selectedKategori,
                     items: wisataProvider.kategori
-                        .map<DropdownMenuItem<String>>((
-                        item,
-                        ) {
-                      return DropdownMenuItem<String>(
-                        value: item['nama_kategori']?.toString(),
-                        child: Text(item['nama_kategori'] ?? '-'),
-                      );
-                    }).toList(),
+                        .map<DropdownMenuItem<String>>((item) {
+                          return DropdownMenuItem<String>(
+                            value: item['nama_kategori']?.toString(),
+                            child: Text(item['nama_kategori'] ?? '-'),
+                          );
+                        })
+                        .toList(),
                     onChanged: (val) {
                       setState(() => _selectedKategori = val);
                     },
@@ -177,7 +170,7 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
                       ),
                     ),
                     validator: (v) =>
-                    v == null || v.isEmpty ? 'Wajib dipilih' : null,
+                        v == null || v.isEmpty ? 'Wajib dipilih' : null,
                   ),
                   const SizedBox(height: 16),
 
@@ -248,35 +241,36 @@ class _ItineraryInputScreenState extends State<ItineraryInputScreen> {
                     onPressed: itineraryProvider.isLoading
                         ? null
                         : () async {
-                      if (!_formKey.currentState!.validate()) return;
+                            if (!_formKey.currentState!.validate()) return;
 
-                      final success =
-                      await itineraryProvider.generateItinerary(
-                        daerah: daerahController.text,
-                        lamaHari: int.tryParse(hariController.text) ?? 1,
-                        kategori: _selectedKategori ?? '',
-                        tanggal: tanggalController.text,
-                      );
+                            final success = await itineraryProvider
+                                .generateItinerary(
+                                  daerah: daerahController.text,
+                                  lamaHari:
+                                      int.tryParse(hariController.text) ?? 1,
+                                  kategori: _selectedKategori ?? '',
+                                  tanggal: tanggalController.text,
+                                );
 
-                      if (success && context.mounted) {
-                        context.push('/itinerary/result');
-                      } else if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Gagal membuat itinerary'),
-                          ),
-                        );
-                      }
-                    },
+                            if (success && context.mounted) {
+                              context.push('/itinerary/result');
+                            } else if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Gagal membuat itinerary'),
+                                ),
+                              );
+                            }
+                          },
                     child: itineraryProvider.isLoading
                         ? const SizedBox(
-                      height: 24,
-                      width: 24,
-                      child: CircularProgressIndicator(
-                        color: kWhite,
-                        strokeWidth: 3,
-                      ),
-                    )
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: kWhite,
+                              strokeWidth: 3,
+                            ),
+                          )
                         : const Text('Buat Itinerary'),
                   ),
                 ],

@@ -56,30 +56,15 @@ class MainNavigationState extends State<MainNavigation> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(
-                0,
-                Icons.home_outlined,
-                Icons.home,
-                "Home",
-              ),
-              _buildNavItem(
-                1,
-                Icons.map_outlined,
-                Icons.map,
-                "Itinerary",
-              ),
+              _buildNavItem(0, Icons.home_outlined, Icons.home, "Home"),
+              _buildNavItem(1, Icons.map_outlined, Icons.map, "Itinerary"),
               _buildNavItem(
                 2,
                 Icons.favorite_border,
                 Icons.favorite,
                 "Favorite",
               ),
-              _buildNavItem(
-                3,
-                Icons.person_outline,
-                Icons.person,
-                "Profile",
-              ),
+              _buildNavItem(3, Icons.person_outline, Icons.person, "Profile"),
             ],
           ),
         ),
@@ -88,11 +73,11 @@ class MainNavigationState extends State<MainNavigation> {
   }
 
   Widget _buildNavItem(
-      int index,
-      IconData icon,
-      IconData activeIcon,
-      String label,
-      ) {
+    int index,
+    IconData icon,
+    IconData activeIcon,
+    String label,
+  ) {
     final bool isActive = index == _currentIndex;
     final Color activeColor = kTeal;
     final Color inactiveColor = kNeutralGrey;
@@ -130,7 +115,7 @@ class MainNavigationState extends State<MainNavigation> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ]
+              ],
             ],
           ),
         ),

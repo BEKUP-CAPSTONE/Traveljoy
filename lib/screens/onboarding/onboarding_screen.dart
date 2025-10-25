@@ -31,23 +31,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     OnboardingContent(
       imagePath: 'assets/images/onboarding1.jpeg',
       title: 'Perjalanan Tak Terlupakan',
-      description: 'Jelajahi ribuan tempat menarik dan rencanakan liburanmu dengan mudah.',
+      description:
+          'Jelajahi ribuan tempat menarik dan rencanakan liburanmu dengan mudah.',
     ),
     OnboardingContent(
       imagePath: 'assets/images/onboarding2.jpeg',
       title: 'Tempat Baru, Cerita Baru',
-      description: 'Dari puncak gunung sampai sudut kota, kami punya rekomendasi terbaik untukmu.',
+      description:
+          'Dari puncak gunung sampai sudut kota, kami punya rekomendasi terbaik untukmu.',
     ),
     OnboardingContent(
       imagePath: 'assets/images/onboarding3.jpeg',
       title: 'Mulai Petualanganmu Sekarang',
-      description: 'Buka pengalaman baru dan ciptakan kenangan indah di setiap perjalanan.',
+      description:
+          'Buka pengalaman baru dan ciptakan kenangan indah di setiap perjalanan.',
     ),
   ];
 
   void _nextPage() {
     if (_currentIndex < _onboardingData.length - 1) {
-      _controller.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _controller.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     } else {
       _finishOnboarding();
     }
@@ -129,10 +135,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       child: Text(
                         _onboardingData[_currentIndex].description,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: kHintColor,
-                        ),
+                        style: TextStyle(fontSize: 16, color: kHintColor),
                       ),
                     ),
 
@@ -202,15 +205,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       style: ElevatedButton.styleFrom(
         backgroundColor: kTeal,
         minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         elevation: 0,
       ),
       child: Text(
-        _currentIndex == _onboardingData.length - 1
-            ? "Mulai"
-            : "Lanjutkan",
+        _currentIndex == _onboardingData.length - 1 ? "Mulai" : "Lanjutkan",
         style: TextStyle(
           color: kWhite,
           fontSize: 18,

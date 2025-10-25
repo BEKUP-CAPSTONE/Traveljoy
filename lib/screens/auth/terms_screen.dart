@@ -19,7 +19,9 @@ class _TermsScreenState extends State<TermsScreen> {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(
-        Uri.parse('https://www.termsfeed.com/live/57acd1fa-f684-47e7-9417-55671dbb093b'),
+        Uri.parse(
+          'https://www.termsfeed.com/live/57acd1fa-f684-47e7-9417-55671dbb093b',
+        ),
       )
       ..setNavigationDelegate(
         NavigationDelegate(
@@ -51,11 +53,7 @@ class _TermsScreenState extends State<TermsScreen> {
             WebViewWidget(controller: _controller),
 
             if (_isLoading)
-              const Center(
-                child: CircularProgressIndicator(
-                  color: kTeal,
-                ),
-              ),
+              const Center(child: CircularProgressIndicator(color: kTeal)),
           ],
         ),
       ),

@@ -42,20 +42,15 @@ class ItineraryResultScreen extends StatelessWidget {
       backgroundColor: kTeal,
       foregroundColor: kWhite,
       minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 2,
-      textStyle: const TextStyle(
-        fontSize: 16,
-      ),
+      textStyle: const TextStyle(fontSize: 16),
     );
 
     final cardShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(16),
       side: BorderSide(color: kHintColor.withOpacity(0.5), width: 1),
     );
-
 
     if (data == null) {
       return Scaffold(
@@ -77,7 +72,14 @@ class ItineraryResultScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: kWhite,
       appBar: AppBar(
-        title: Text(judul, style: const TextStyle(color: kBlack, fontSize: 18, fontWeight: FontWeight.bold,)),
+        title: Text(
+          judul,
+          style: const TextStyle(
+            color: kBlack,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: kPrimaryDark),
           onPressed: () => context.pop(),
@@ -110,9 +112,7 @@ class ItineraryResultScreen extends StatelessWidget {
                       child: ExpansionTile(
                         title: Text(
                           'Hari ${hari['hari']}',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,7 +163,8 @@ class ItineraryResultScreen extends StatelessWidget {
                                 const SizedBox(width: 12),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(k['aktivitas']),
                                       const SizedBox(height: 2),

@@ -91,8 +91,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-
-
   void _startAutoScroll() {
     _bannerTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (_bannerImages.isNotEmpty && _bannerPageController.hasClients) {
@@ -117,9 +115,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List<Map<String, dynamic>> _getFilteredWisata(
-      WisataProvider wP,
-      FavoriteProvider fP,
-      ) {
+    WisataProvider wP,
+    FavoriteProvider fP,
+  ) {
     List<Map<String, dynamic>> allWisata = wP.wisata
         .cast<Map<String, dynamic>>();
 
@@ -160,11 +158,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final metadata = user?.userMetadata;
     final profileProvider = Provider.of<ProfileProvider>(context);
 
-    final String displayName = (profileProvider.profileName?.trim().isNotEmpty ?? false)
+    final String displayName =
+        (profileProvider.profileName?.trim().isNotEmpty ?? false)
         ? profileProvider.profileName!
         : (metadata?['name'] as String?)?.trim() ??
-        user?.email?.split('@').first.toUpperCase() ??
-        'Guest User';
+              user?.email?.split('@').first.toUpperCase() ??
+              'Guest User';
 
     final String? avatarUrl = metadata?['avatar_url'] as String?;
 
@@ -176,7 +175,8 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             GestureDetector(
               onTap: () {
-                final mainNavState = context.findAncestorStateOfType<MainNavigationState>();
+                final mainNavState = context
+                    .findAncestorStateOfType<MainNavigationState>();
                 mainNavState?.navigateToProfile();
               },
               child: Row(
@@ -212,10 +212,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
             ),
-             GestureDetector(
-               onTap: () {
-                 context.push('/notifications');
-               },
+            GestureDetector(
+              onTap: () {
+                context.push('/notifications');
+              },
               child: Container(
                 width: 48,
                 height: 48,
@@ -257,7 +257,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildSearchBar(BuildContext context) {
     final wisataProvider = context.read<WisataProvider>();
 
@@ -269,7 +268,11 @@ class _HomeScreenState extends State<HomeScreen> {
             color: kWhite,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
-              BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2)),
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: Offset(0, 2),
+              ),
             ],
           ),
           child: Row(
@@ -298,7 +301,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     setState(() => _isSearching = true);
 
-                    final results = await wisataProvider.searchSuggestions(value);
+                    final results = await wisataProvider.searchSuggestions(
+                      value,
+                    );
                     if (mounted) {
                       setState(() {
                         _searchResults = results;
@@ -319,7 +324,11 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
-                BoxShadow(color: Colors.black26.withOpacity(0.1), blurRadius: 6, offset: const Offset(0, 2)),
+                BoxShadow(
+                  color: Colors.black26.withOpacity(0.1),
+                  blurRadius: 6,
+                  offset: const Offset(0, 2),
+                ),
               ],
             ),
             child: Column(
@@ -477,7 +486,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
               return GestureDetector(
                 onTap: () {
-                  context.push('/wisata-kategori/${kategori['id']}/${kategori['nama_kategori']}');
+                  context.push(
+                    '/wisata-kategori/${kategori['id']}/${kategori['nama_kategori']}',
+                  );
                 },
                 child: Container(
                   width: 80,
@@ -488,11 +499,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       CircleAvatar(
                         radius: 28,
                         backgroundColor: kNeutralGrey.withOpacity(0.25),
-                        child: Icon(
-                          categoryIcon,
-                          color: kBlack,
-                          size: 28,
-                        ),
+                        child: Icon(categoryIcon, color: kBlack, size: 28),
                       ),
                       const SizedBox(height: 6),
                       Text(
@@ -514,10 +521,10 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildPopularWisata(
-      BuildContext context,
-      WisataProvider provider,
-      FavoriteProvider favProvider,
-      ) {
+    BuildContext context,
+    WisataProvider provider,
+    FavoriteProvider favProvider,
+  ) {
     final List<Map<String, dynamic>> filteredWisata = _getFilteredWisata(
       provider,
       favProvider,
@@ -543,7 +550,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
             final String gambarUrl =
-            (gambarList != null && gambarList.isNotEmpty)
+                (gambarList != null && gambarList.isNotEmpty)
                 ? gambarList.first.toString()
                 : 'assets/images/wisataDefault.png';
 
@@ -596,13 +603,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                   shape: BoxShape.circle,
                                 ),
                                 child: Icon(
-                                  isFav ? Icons.favorite : Icons.favorite_outline,
+                                  isFav
+                                      ? Icons.favorite
+                                      : Icons.favorite_outline,
                                   color: kAccentRed,
                                   size: 22,
                                 ),
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -697,7 +706,8 @@ class _HomeScreenState extends State<HomeScreen> {
             itemBuilder: (context, index) {
               final wisata = provider.wisata[index];
               final List<dynamic>? gambarList = wisata['gambar_url'] as List?;
-              final String gambarUrl = (gambarList != null && gambarList.isNotEmpty)
+              final String gambarUrl =
+                  (gambarList != null && gambarList.isNotEmpty)
                   ? gambarList.first.toString()
                   : 'assets/images/wisataDefault.png';
 
@@ -775,37 +785,36 @@ class _HomeScreenState extends State<HomeScreen> {
               );
             },
           ),
-        )
+        ),
       ],
     );
   }
 
-
   Widget _buildImage(String url, double height, double width) {
     return url.startsWith('http')
         ? Image.network(
-      url,
-      height: height,
-      width: width,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Container(
-          height: height,
-          width: width,
-          color: kNeutralGrey.withOpacity(0.2),
-          child: Center(child: CircularProgressIndicator(color: kTeal)),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Image.asset(
-          'assets/images/wisataDefault.png',
-          height: height,
-          width: width,
-          fit: BoxFit.cover,
-        );
-      },
-    )
+            url,
+            height: height,
+            width: width,
+            fit: BoxFit.cover,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Container(
+                height: height,
+                width: width,
+                color: kNeutralGrey.withOpacity(0.2),
+                child: Center(child: CircularProgressIndicator(color: kTeal)),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return Image.asset(
+                'assets/images/wisataDefault.png',
+                height: height,
+                width: width,
+                fit: BoxFit.cover,
+              );
+            },
+          )
         : Image.asset(url, height: height, width: width, fit: BoxFit.cover);
   }
 
@@ -817,13 +826,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final SystemUiOverlayStyle currentStyle = _isScrolled
         ? SystemUiOverlayStyle(
-      statusBarColor: kWhite,
-      statusBarIconBrightness: Brightness.dark,
-    )
+            statusBarColor: kWhite,
+            statusBarIconBrightness: Brightness.dark,
+          )
         : const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-    );
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.light,
+          );
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: currentStyle,
@@ -836,72 +845,71 @@ class _HomeScreenState extends State<HomeScreen> {
               child: wisataProvider.isLoading
                   ? Center(child: CircularProgressIndicator(color: kTeal))
                   : ListView(
-                controller: _scrollController,
-                padding: EdgeInsets.zero,
-                children: [
-                  AnimatedSwitcher(
-                    duration: const Duration(seconds: 2),
-                    child: Container(
-                      key: ValueKey<int>(_currentBackgroundIndex),
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/onboarding1.jpeg",
+                      controller: _scrollController,
+                      padding: EdgeInsets.zero,
+                      children: [
+                        AnimatedSwitcher(
+                          duration: const Duration(seconds: 2),
+                          child: Container(
+                            key: ValueKey<int>(_currentBackgroundIndex),
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage(
+                                  "assets/images/onboarding1.jpeg",
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.center,
+                                  colors: [
+                                    Colors.white,
+                                    Colors.white.withOpacity(0.0),
+                                    Colors.black.withOpacity(0.4),
+                                  ],
+                                  stops: const [0.0, 0.5, 1.0],
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(height: statusBarHeight + 16),
+                                    _buildHeader(context),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          fit: BoxFit.cover,
                         ),
-                      ),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.center,
-                            colors: [
-                              Colors.white,
-                              Colors.white.withOpacity(0.0),
-                              Colors.black.withOpacity(0.4),
-                            ],
-                            stops: const [
-                              0.0,
-                              0.5,
-                              1.0,
-                            ],
-                          ),
-                        ),
-                        child: Padding(
+
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              SizedBox(height: statusBarHeight + 16),
-                              _buildHeader(context),
+                              _buildKategoriGrid(wisataProvider),
+                              const SizedBox(height: 10),
+                              _buildFilterTabs(),
+                              const SizedBox(height: 20),
+                              _buildPopularWisata(
+                                context,
+                                wisataProvider,
+                                context.watch<FavoriteProvider>(),
+                              ),
+                              const SizedBox(height: 30),
+                              _buildSpecialForYou(context, wisataProvider),
+                              const SizedBox(height: 30),
                             ],
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Column(
-                      children: [
-                        _buildKategoriGrid(wisataProvider),
-                        const SizedBox(height: 10),
-                        _buildFilterTabs(),
-                        const SizedBox(height: 20),
-                        _buildPopularWisata(
-                          context,
-                          wisataProvider,
-                          context.watch<FavoriteProvider>(),
-                        ),
-                        const SizedBox(height: 30),
-                        _buildSpecialForYou(context, wisataProvider),
-                        const SizedBox(height: 30),
                       ],
                     ),
-                  ),
-                ],
-              ),
             ),
             Positioned(
               top: 0,

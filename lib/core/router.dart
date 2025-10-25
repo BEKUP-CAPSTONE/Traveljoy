@@ -21,9 +21,9 @@ import '../screens/profile/tentang_app.dart';
 
 class AppRouter {
   static GoRouter createRouter(
-      AuthProvider authProvider,
-      OnboardingProvider onboardingProvider,
-      ) {
+    AuthProvider authProvider,
+    OnboardingProvider onboardingProvider,
+  ) {
     return GoRouter(
       initialLocation: '/',
       refreshListenable: Listenable.merge([authProvider, onboardingProvider]),
@@ -35,8 +35,10 @@ class AppRouter {
           routes: [
             GoRoute(
               path: 'itinerary/input',
-              pageBuilder: (context, state) =>
-                  _buildSlideTransitionPage(state, const ItineraryInputScreen()),
+              pageBuilder: (context, state) => _buildSlideTransitionPage(
+                state,
+                const ItineraryInputScreen(),
+              ),
             ),
             GoRoute(
               path: '/itinerary/result',
@@ -91,7 +93,9 @@ class AppRouter {
           pageBuilder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
             return _buildSlideTransitionPage(
-                state, WisataDaerahScreen(idDaerah: id));
+              state,
+              WisataDaerahScreen(idDaerah: id),
+            );
           },
         ),
         GoRoute(
@@ -114,10 +118,7 @@ class AppRouter {
           path: '/detail-wisata/:id',
           pageBuilder: (context, state) {
             final id = int.parse(state.pathParameters['id']!);
-            return _buildSlideTransitionPage(
-              state,
-              DetailWisataScreen(id: id),
-            );
+            return _buildSlideTransitionPage(state, DetailWisataScreen(id: id));
           },
         ),
         GoRoute(
@@ -134,7 +135,8 @@ class AppRouter {
       redirect: (context, state) {
         final loggedIn = authProvider.isLoggedIn;
         final hasSeenOnboarding = onboardingProvider.hasSeenOnboarding;
-        final loggingIn = state.matchedLocation == '/login' ||
+        final loggingIn =
+            state.matchedLocation == '/login' ||
             state.matchedLocation == '/register';
         final onboarding = state.matchedLocation == '/onboarding';
         final publicRoutes = ['/terms'];
@@ -157,7 +159,9 @@ class AppRouter {
   }
 
   static CustomTransitionPage _buildSlideTransitionPage(
-      GoRouterState state, Widget child) {
+    GoRouterState state,
+    Widget child,
+  ) {
     return CustomTransitionPage(
       key: state.pageKey,
       child: child,
@@ -166,8 +170,10 @@ class AppRouter {
         const end = Offset.zero;
         const curve = Curves.easeInOut;
 
-        final tween =
-        Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+        final tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
         final offsetAnimation = animation.drive(tween);
 
         return SlideTransition(position: offsetAnimation, child: child);
@@ -175,5 +181,4 @@ class AppRouter {
       transitionDuration: const Duration(milliseconds: 250),
     );
   }
-
 }

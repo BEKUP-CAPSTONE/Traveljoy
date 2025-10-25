@@ -21,9 +21,7 @@ import 'firebase_options.dart';
 
 /// 🔔 Background message handler
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   final fcmToken = await FirebaseMessaging.instance.getToken();
   print('🔑 FCM Token: $fcmToken');
 
@@ -45,14 +43,15 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 /// ✅ Local notification setup
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
 
 Future<void> initLocalNotifications() async {
   const AndroidInitializationSettings initializationSettingsAndroid =
-  AndroidInitializationSettings('@mipmap/ic_launcher');
+      AndroidInitializationSettings('@mipmap/ic_launcher');
 
-  const InitializationSettings initializationSettings =
-  InitializationSettings(android: initializationSettingsAndroid);
+  const InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 }
@@ -61,14 +60,14 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Secrets.load();
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    statusBarIconBrightness: Brightness.dark,
-  ));
-
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ),
   );
+
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initLocalNotifications();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
@@ -129,7 +128,9 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => HistoryProvider()),
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
         ChangeNotifierProvider(create: (_) => AnnouncementProvider()),
-        ChangeNotifierProvider(create: (_) => ProfileProvider(Supabase.instance.client)),
+        ChangeNotifierProvider(
+          create: (_) => ProfileProvider(Supabase.instance.client),
+        ),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
