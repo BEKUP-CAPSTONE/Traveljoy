@@ -28,6 +28,32 @@ class WisataProvider extends ChangeNotifier {
     }
   }
 
+  Future<List<Map<String, dynamic>>> fetchWisataByKategori(int idKategori) async {
+    try {
+      debugPrint('🔍 [WisataProvider] Ambil wisata untuk kategori ID: $idKategori');
+      _isLoading = true;
+      notifyListeners();
+
+      final response = await supabase
+          .from('wisata')
+          .select('id, nama_wisata, deskripsi_wisata, gambar_url, alamat')
+          .eq('id_kategori', idKategori)
+          .order('created_at', ascending: false);
+
+      final List<Map<String, dynamic>> data =
+      List<Map<String, dynamic>>.from(response);
+
+      debugPrint('✅ [WisataProvider] Berhasil ambil ${data.length} data wisata.');
+      return data;
+    } catch (e) {
+      debugPrint('❌ [WisataProvider] Gagal ambil wisata by kategori: $e');
+      return [];
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchRandomWisata() async {
     try {
       _isLoading = true;
@@ -35,8 +61,8 @@ class WisataProvider extends ChangeNotifier {
 
       final response = await supabase
           .from('wisata')
-          .select('id, nama_wisata, deskripsi_wisata, gambar_url')
-          .limit(10);
+          .select('id, nama_wisata, deskripsi_wisata, gambar_url, daerah(nama_daerah)')
+          .limit(6);
 
       _wisata = List<Map<String, dynamic>>.from(response);
     } catch (e) {
@@ -64,6 +90,22 @@ class WisataProvider extends ChangeNotifier {
     } finally {
       _isLoading = false;
       notifyListeners();
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> searchSuggestions(String keyword) async {
+    if (keyword.isEmpty) return [];
+    try {
+      final response = await supabase
+          .from('wisata')
+          .select('id, nama_wisata')
+          .ilike('nama_wisata', '%$keyword%')
+          .limit(5);
+
+      return List<Map<String, dynamic>>.from(response);
+    } catch (e) {
+      debugPrint('❌ [WisataProvider] Gagal ambil suggestions: $e');
+      return [];
     }
   }
 

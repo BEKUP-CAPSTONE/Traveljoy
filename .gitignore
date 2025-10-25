@@ -121,3 +121,5 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 assets/secrets.json
 lib/core/constants/secrets.dart
+.idea/libraries/Dart_SDK.xml
+.idea/libraries/Dart_Packages.xml

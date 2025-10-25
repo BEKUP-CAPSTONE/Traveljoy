@@ -14,6 +14,7 @@ class AuthProvider with ChangeNotifier {
 
   bool get isLoggedIn => supabase.auth.currentUser != null;
   String get userEmail => supabase.auth.currentUser?.email ?? '';
+  String? get userId => supabase.auth.currentUser?.id;
 
   // AuthProvider() {
   //   _init();
@@ -58,6 +59,7 @@ class AuthProvider with ChangeNotifier {
       debugPrint('❌ [Auth] Gagal memastikan profile user: $e');
     }
   }
+
   /// ---------------- Email Sign Up ----------------
 
   Future<bool> signUp({required String email, required String password}) async {
@@ -148,6 +150,93 @@ class AuthProvider with ChangeNotifier {
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
+  }
+
+  Future<bool> signInWithGoogle() async {
+    const webClientId =
+        '678803397247-srlgok1o6iplsn2cl80drjpn7loegn0m.apps.googleusercontent.com';
+
+    try {
+      _setLoading(true);
+      _errorMessage = null;
+
+      debugPrint('🔵 [Auth] Sign in with Google...');
+
+      final googleSignIn = GoogleSignIn.instance;
+      await googleSignIn.initialize(serverClientId: webClientId);
+      final googleUser = await googleSignIn.authenticate();
+
+      if (googleUser == null) {
+        _errorMessage = 'Login Google dibatalkan pengguna.';
+        debugPrint('⚠️ [Auth] Google login dibatalkan.');
+        return false;
+      }
+
+      // Minta authorization untuk akses email & profile
+      final scopes = ['email', 'profile'];
+      final authorization =
+          await googleUser.authorizationClient.authorizationForScopes(scopes) ??
+              await googleUser.authorizationClient.authorizeScopes(scopes);
+
+      final idToken = googleUser.authentication.idToken;
+      if (idToken == null) throw AuthException('ID Token tidak ditemukan.');
+
+      // Login ke Supabase menggunakan token Google
+      final response = await supabase.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+        accessToken: authorization.accessToken,
+      );
+
+      final user = response.user;
+      if (user == null) {
+        _errorMessage = 'Login Google gagal. Tidak ada user yang dikembalikan.';
+        debugPrint('⚠️ [Auth] Tidak ada user dari Supabase.');
+        return false;
+      }
+
+      debugPrint('✅ [Auth] Google login success: ${user.email}');
+
+      // --- Buat atau update profile di tabel profiles ---
+      try {
+        final existingProfile = await supabase
+            .from('profiles')
+            .select()
+            .eq('id', user.id)
+            .maybeSingle();
+
+        final name =
+            user.userMetadata?['name'] ?? user.email?.split('@').first ?? 'User Baru';
+        final avatarUrl = user.userMetadata?['avatar_url'] ??
+            user.userMetadata?['picture'] ??
+            null;
+
+        if (existingProfile == null) {
+          await supabase.from('profiles').insert({
+            'id': user.id,
+            'name': name,
+            'avatar_url': avatarUrl,
+          });
+          debugPrint('✅ [Auth] Profile baru dibuat untuk user: ${user.id}');
+        } else {
+          debugPrint('ℹ️ [Auth] Profile sudah ada untuk user: ${user.id}');
+        }
+      } catch (e) {
+        debugPrint('❌ [Auth] Gagal menyimpan profile Google: $e');
+      }
+
+      return true;
+    } on AuthException catch (e) {
+      _errorMessage = e.message;
+      debugPrint('❌ [Auth] AuthException: ${e.message}');
+      return false;
+    } catch (e, st) {
+      _errorMessage = 'Terjadi kesalahan: $e';
+      debugPrint('❌ [Auth] Unexpected error: $e\n$st');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
   }
 }
 
